@@ -99,11 +99,12 @@ def load_db():
 db = load_db()
 
 # ─── OpenAI Key from env ────────────────────────────────────────────────────────
-env_api_key = ""
+env_api_key = os.getenv("OPENAI_API_KEY", "")
 
 # ─── LLM Mapping Function ───────────────────────────────────────────────────────
 def analyze_project(user_input: str, api_key: str) -> dict:
-    client = OpenAI(api_key=api_key)
+    import httpx
+    client = OpenAI(api_key=api_key, http_client=httpx.Client())
 
     system_prompt = """You are an expert in carbon markets and Gold Standard certification.
 
