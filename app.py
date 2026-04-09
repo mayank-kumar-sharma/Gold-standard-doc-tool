@@ -99,8 +99,7 @@ def load_db():
 db = load_db()
 
 # ─── OpenAI Key from env ────────────────────────────────────────────────────────
-env_api_key = os.getenv("OPENAI_API_KEY", "")
-
+env_api_key = ""
 # ─── LLM Mapping Function ───────────────────────────────────────────────────────
 def analyze_project(user_input: str, api_key: str) -> dict:
     import httpx
