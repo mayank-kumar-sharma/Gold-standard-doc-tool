@@ -99,7 +99,7 @@ def load_db():
 db = load_db()
 
 # ─── OpenAI Key from env ────────────────────────────────────────────────────────
-env_api_key = "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"
+env_api_key = ""
 
 # ─── LLM Mapping Function ───────────────────────────────────────────────────────
 def analyze_project(user_input: str, api_key: str) -> dict:
