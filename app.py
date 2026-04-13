@@ -98,12 +98,10 @@ def load_db():
 
 db = load_db()
 
-# ─── OpenAI Key from env ────────────────────────────────────────────────────────
-env_api_key = ""
-
 # ─── LLM Mapping Function ───────────────────────────────────────────────────────
-def analyze_project(user_input: str, api_key: str) -> dict:
+def analyze_project(user_input: str) -> dict:
     import httpx
+    api_key = os.getenv("OPENAI_API_KEY")
     client = OpenAI(api_key=api_key, http_client=httpx.Client())
 
     system_prompt = """You are an expert in carbon markets and Gold Standard certification.
@@ -229,24 +227,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ─── Input ─────────────────────────────────────────────────────────────────────
-col_input, col_key = st.columns([3, 1])
+user_input = st.text_area(
+    "📝 Describe your project",
+    placeholder="e.g. I want to distribute improved cookstoves to rural households in Kenya...\ne.g. Solar mini-grid electrification in rural India\ne.g. Afforestation using native trees in degraded land in Brazil",
+    height=130
+)
 
-with col_input:
-    user_input = st.text_area(
-        "📝 Describe your project",
-        placeholder="e.g. I want to distribute improved cookstoves to rural households in Kenya...\ne.g. Solar mini-grid electrification in rural India\ne.g. Afforestation using native trees in degraded land in Brazil",
-        height=130
-    )
-
-with col_key:
-    st.markdown("<br>", unsafe_allow_html=True)
-    api_key_input = st.text_input(
-        "🔑 OpenAI API Key",
-        type="password",
-        value=env_api_key,
-        help="Your OpenAI API key. Starts with sk-"
-    )
-    find_btn = st.button("🔍 Find My Documents", type="primary", use_container_width=True)
+find_btn = st.button("🔍 Find My Documents", type="primary")
 
 st.markdown("---")
 
@@ -254,12 +241,10 @@ st.markdown("---")
 if find_btn:
     if not user_input.strip():
         st.warning("⚠️ Please describe your project first!")
-    elif not api_key_input.strip():
-        st.warning("⚠️ Please enter your OpenAI API key!")
     else:
         with st.spinner("🤔 Analyzing your project and finding relevant documents..."):
             try:
-                analysis = analyze_project(user_input, api_key_input.strip())
+                analysis = analyze_project(user_input)
                 bundle = build_document_bundle(analysis)
 
                 confidence = analysis.get("confidence", 0)
