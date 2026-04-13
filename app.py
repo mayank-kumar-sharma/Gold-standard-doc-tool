@@ -100,6 +100,7 @@ db = load_db()
 
 # ─── OpenAI Key from env ────────────────────────────────────────────────────────
 env_api_key = ""
+
 # ─── LLM Mapping Function ───────────────────────────────────────────────────────
 def analyze_project(user_input: str, api_key: str) -> dict:
     import httpx
@@ -128,7 +129,13 @@ Activity type definitions:
 - community_services: cookstoves, clean cooking, safe water, WASH, household energy
 - blue_carbon: mangroves, wetlands, seagrass, coastal ecosystems, macroalgae
 - engineered_removals: biochar (industrial scale), CCS, BECCS, DAC, carbon mineralisation
-- waste: landfill, recycling, solid waste, organic waste processing, composting"""
+- waste: landfill, recycling, solid waste, organic waste processing, composting
+
+IMPORTANT RULES:
+- NEVER return null for activity_type — always return best guess even if vague
+- secondary_activity_type should be null if not clearly applicable
+- If description is too vague, still pick the CLOSEST activity_type and set confidence low
+- keywords should always be a list of strings, never empty"""
 
     response = client.chat.completions.create(
         model="gpt-4.1",
@@ -141,7 +148,22 @@ Activity type definitions:
     )
 
     raw = response.choices[0].message.content.strip()
-    return json.loads(raw)
+    result = json.loads(raw)
+
+    # ── Safety guards — prevent NoneType crashes ──
+    if not result.get("activity_type"):
+        result["activity_type"] = "renewable_energy"
+    if not result.get("keywords"):
+        result["keywords"] = []
+    if not result.get("confidence"):
+        result["confidence"] = 0.3
+    if not result.get("project_summary"):
+        result["project_summary"] = "Carbon project — please provide more details for better results."
+    # Ensure secondary is truly None if null/missing
+    if result.get("secondary_activity_type") in [None, "null", "", "none"]:
+        result["secondary_activity_type"] = None
+
+    return result
 
 # ─── Document Bundle Builder ────────────────────────────────────────────────────
 def build_document_bundle(analysis: dict) -> dict:
@@ -164,11 +186,8 @@ def build_document_bundle(analysis: dict) -> dict:
         m_types = m.get("activity_types", [])
         keyword_match = any(kw in keyword_string for kw in m_keywords)
         type_match = activity_type in m_types or (secondary and secondary in m_types)
-        # Require BOTH to match — prevents wrong cross-type suggestions
         if keyword_match and type_match:
             matched_methodologies.append(m)
-        # Fallback: if no keyword match but type matches strongly, still include
-        # (handles generic descriptions like "solar project")
         elif type_match and not matched_methodologies:
             matched_methodologies.append(m)
 
@@ -244,14 +263,12 @@ if find_btn:
                 bundle = build_document_bundle(analysis)
 
                 confidence = analysis.get("confidence", 0)
-                activity_type_raw = analysis.get("activity_type", "Unknown")
+                activity_type_raw = analysis.get("activity_type") or "Unknown"
                 activity_type = activity_type_raw.replace("_", " ").title()
                 secondary = analysis.get("secondary_activity_type")
                 summary = analysis.get("project_summary", "")
 
                 # ── Confidence-based methodology limiting ──
-                # High confidence (≥0.7) → top 2 (precise, no noise)
-                # Low confidence  (<0.7) → top 3 + review warning
                 all_methodologies = bundle["methodologies"]
                 if confidence >= 0.7:
                     methodologies_to_show = all_methodologies[:2]
@@ -268,17 +285,16 @@ if find_btn:
                 else:
                     badge = f'<span class="confidence-badge-low">❗ Low Confidence {int(confidence*100)}%</span>'
 
-                secondary_tag = ""
+                # ── Safe secondary handling ──
                 secondary_label = ""
-                if secondary:
-                    secondary_tag = f' + <span class="activity-tag">{secondary.replace("_"," ").title()}</span>'
-                    secondary_label = f" – {secondary.replace('_',' ').title()}"
+                if secondary and secondary not in [None, "null", "", "none"]:
+                    secondary_label = f" – {secondary.replace('_', ' ').title()}"
 
                 # ── Trust Line ──
                 st.markdown(f"""
                 <div class="result-header">
                     <div style="font-weight:700; font-size:1.05rem; color:#2d3748; margin-bottom:6px;">
-                        ✅ We've identified your project as: 
+                        ✅ We've identified your project as:
                         <span class="activity-tag">{activity_type}{secondary_label}</span>
                         &nbsp;&nbsp;{badge}
                     </div>
@@ -287,7 +303,7 @@ if find_btn:
                 """, unsafe_allow_html=True)
 
                 if show_review_warning:
-                    reason = analysis.get("low_confidence_reason", "")
+                    reason = analysis.get("low_confidence_reason") or "Project description is too vague."
                     st.warning(f"⚠️ Low confidence match — {reason}\n\nWe're showing you 3 methodology options. Please review carefully and pick the one that fits your project.")
 
                 # 🔴 MUST READ
