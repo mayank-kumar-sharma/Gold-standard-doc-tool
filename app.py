@@ -1,352 +1,644 @@
 import streamlit as st
 import json
+import re
 import os
+import csv
+import io
+from datetime import datetime
 from openai import OpenAI
+import httpx
 
-# ─── Page Config ───────────────────────────────────────────────────────────────
+# ─── Page Config ────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Gold Standard Document Finder",
+    page_title="Carbon Standards Document Finder",
     page_icon="🌿",
     layout="wide"
 )
 
-# ─── Custom CSS ────────────────────────────────────────────────────────────────
+# ─── Session State Init ──────────────────────────────────────────────────────
+if "show_results" not in st.session_state:
+    st.session_state["show_results"] = False
+if "ai_summary" not in st.session_state:
+    st.session_state["ai_summary"] = None
+if "registry_key" not in st.session_state:
+    st.session_state["registry_key"] = "gold_standard"
+if "project_type_key" not in st.session_state:
+    st.session_state["project_type_key"] = "afforestation_reforestation"
+if "registry_display" not in st.session_state:
+    st.session_state["registry_display"] = ""
+if "project_type_display" not in st.session_state:
+    st.session_state["project_type_display"] = ""
+
+# ─── Load Database ───────────────────────────────────────────────────────────
+@st.cache_data
+def load_db():
+    try:
+        with open("documents_db.json", "r") as f:
+            return json.load(f)
+    except Exception as e:
+        st.error(f"⚠️ Could not load document database: {e}")
+        return {}
+
+db = load_db()
+
+# ─── Styling ─────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-    .main { background-color: #f8faf8; }
-    .stApp { font-family: 'Segoe UI', sans-serif; }
-
-    .hero-box {
-        background: linear-gradient(135deg, #1a6b3c, #2d9e5f);
-        padding: 2.5rem 2rem;
-        border-radius: 16px;
+    .main-header {
+        background: linear-gradient(135deg, #1a4731 0%, #2d7a4f 100%);
+        padding: 2rem;
+        border-radius: 12px;
         color: white;
         margin-bottom: 2rem;
-    }
-    .hero-box h1 { font-size: 2rem; margin-bottom: 0.3rem; }
-    .hero-box p  { font-size: 1rem; opacity: 0.9; margin: 0; }
-
-    .section-red {
-        background: #fff5f5;
-        border-left: 5px solid #e53e3e;
-        border-radius: 10px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.2rem;
-    }
-    .section-yellow {
-        background: #fffbeb;
-        border-left: 5px solid #d69e2e;
-        border-radius: 10px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.2rem;
-    }
-    .section-green {
-        background: #f0fff4;
-        border-left: 5px solid #38a169;
-        border-radius: 10px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.2rem;
-    }
-    .section-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 0.3rem;
-        color: #2d3748;
+        text-align: center;
     }
     .doc-card {
-        background: white;
+        background: #f8f9fa;
+        border-left: 4px solid #2d7a4f;
+        padding: 12px 16px;
+        margin: 8px 0;
+        border-radius: 0 8px 8px 0;
+    }
+    .template-card {
+        background: #fff8e1;
+        border-left: 4px solid #f59e0b;
+        padding: 12px 16px;
+        margin: 8px 0;
+        border-radius: 0 8px 8px 0;
+    }
+    .methodology-card {
+        background: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        padding: 12px 16px;
+        margin: 8px 0;
+        border-radius: 0 8px 8px 0;
+    }
+    .core-card {
+        background: #fce4ec;
+        border-left: 4px solid #e91e63;
+        padding: 12px 16px;
+        margin: 8px 0;
+        border-radius: 0 8px 8px 0;
+    }
+    .section-header {
+        font-size: 1.1rem;
+        font-weight: 700;
+        padding: 8px 0;
+        margin: 16px 0 8px 0;
+        border-bottom: 2px solid #e0e0e0;
+    }
+    .ai-analysis {
+        background: #e3f2fd;
+        border: 1px solid #90caf9;
+        padding: 16px;
         border-radius: 8px;
-        padding: 0.75rem 1rem;
-        margin-bottom: 0.5rem;
-        border: 1px solid #e2e8f0;
+        margin: 16px 0;
     }
-    .doc-title { font-weight: 600; color: #2d3748; font-size: 0.92rem; }
-    .doc-desc  { color: #718096; font-size: 0.82rem; margin-top: 2px; }
-
-    .confidence-badge-high {
-        background: #c6f6d5; color: #22543d;
-        padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
-    }
-    .confidence-badge-medium {
-        background: #fefcbf; color: #744210;
-        padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
-    }
-    .confidence-badge-low {
-        background: #fed7d7; color: #742a2a;
-        padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
-    }
-    .result-header {
-        background: white;
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        margin-bottom: 1.5rem;
-        border: 1px solid #e2e8f0;
-    }
-    .activity-tag {
-        background: #e6fffa; color: #234e52;
-        padding: 4px 12px; border-radius: 20px;
-        font-size: 0.85rem; font-weight: 600;
+    .export-box {
+        background: #f0fdf4;
+        border: 1px solid #86efac;
+        padding: 16px 20px;
+        border-radius: 10px;
+        margin: 20px 0 8px 0;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# ─── Load JSON DB ───────────────────────────────────────────────────────────────
-@st.cache_data
-def load_db():
-    with open("gs_documents.json", "r") as f:
-        return json.load(f)
-
-db = load_db()
-
-# ─── LLM Mapping Function ───────────────────────────────────────────────────────
-def analyze_project(user_input: str) -> dict:
-    import httpx
-    api_key = os.getenv("OPENAI_API_KEY")
-    client = OpenAI(api_key=api_key, http_client=httpx.Client())
-
-    system_prompt = """You are an expert in carbon markets and Gold Standard certification.
-
-Your job is to analyze a project description and extract structured information.
-
-You MUST respond with ONLY valid JSON — no explanation, no markdown, no extra text.
-
-Return exactly this structure:
-{
-  "activity_type": "<one of: agriculture, forestry, renewable_energy, community_services, blue_carbon, engineered_removals, waste>",
-  "secondary_activity_type": "<optional second type or null>",
-  "keywords": ["keyword1", "keyword2", "keyword3"],
-  "confidence": <number between 0.0 and 1.0>,
-  "project_summary": "<1 sentence summary of what the project does>",
-  "low_confidence_reason": "<if confidence < 0.7, explain why, else null>"
-}
-
-Activity type definitions:
-- agriculture: farming, crops, livestock, soil carbon, rice, dairy, biochar from agricultural waste
-- forestry: tree planting, afforestation, reforestation, REDD+, forest conservation
-- renewable_energy: solar, wind, hydro, bioenergy, electrification, fuel switch, EV, transport
-- community_services: cookstoves, clean cooking, safe water, WASH, household energy
-- blue_carbon: mangroves, wetlands, seagrass, coastal ecosystems, macroalgae
-- engineered_removals: biochar (industrial scale), CCS, BECCS, DAC, carbon mineralisation
-- waste: landfill, recycling, solid waste, organic waste processing, composting
-
-IMPORTANT RULES:
-- NEVER return null for activity_type — always return best guess even if vague
-- secondary_activity_type should be null if not clearly applicable
-- If description is too vague, still pick the CLOSEST activity_type and set confidence low
-- keywords should always be a list of strings, never empty"""
-
-    response = client.chat.completions.create(
-        model="gpt-4.1",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"Project description: {user_input}"}
-        ],
-        temperature=0.1,
-        max_tokens=400
-    )
-
-    raw = response.choices[0].message.content.strip()
-    result = json.loads(raw)
-
-    # ── Safety guards — prevent NoneType crashes ──
-    if not result.get("activity_type"):
-        result["activity_type"] = "renewable_energy"
-    if not result.get("keywords"):
-        result["keywords"] = []
-    if not result.get("confidence"):
-        result["confidence"] = 0.3
-    if not result.get("project_summary"):
-        result["project_summary"] = "Carbon project — please provide more details for better results."
-    # Ensure secondary is truly None if null/missing
-    if result.get("secondary_activity_type") in [None, "null", "", "none"]:
-        result["secondary_activity_type"] = None
-
-    return result
-
-# ─── Document Bundle Builder ────────────────────────────────────────────────────
-def build_document_bundle(analysis: dict) -> dict:
-    activity_type = analysis.get("activity_type")
-    secondary = analysis.get("secondary_activity_type")
-    keywords = [k.lower() for k in analysis.get("keywords", [])]
-    keyword_string = " ".join(keywords)
-
-    # Activity requirements
-    activity_req = []
-    if activity_type and activity_type in db["activity_requirements"]:
-        activity_req.append(db["activity_requirements"][activity_type])
-    if secondary and secondary in db["activity_requirements"] and secondary != activity_type:
-        activity_req.append(db["activity_requirements"][secondary])
-
-    # Methodology matching — BOTH activity_type AND keywords must match
-    matched_methodologies = []
-    for m in db["methodologies"]:
-        m_keywords = [k.lower() for k in m.get("keywords", [])]
-        m_types = m.get("activity_types", [])
-        keyword_match = any(kw in keyword_string for kw in m_keywords)
-        type_match = activity_type in m_types or (secondary and secondary in m_types)
-        if keyword_match and type_match:
-            matched_methodologies.append(m)
-        elif type_match and not matched_methodologies:
-            matched_methodologies.append(m)
-
-    # Product requirements
-    product_reqs = []
-    for pr in db["product_requirements"]:
-        applicable = pr.get("applicable_to", [])
-        if "all" in applicable or activity_type in applicable or (secondary and secondary in applicable):
-            product_reqs.append(pr)
-
-    return {
-        "core_documents": db["core_documents"],
-        "sdg_tools": db["sdg_tools"],
-        "methodology_procedures": db["methodology_procedures"],
-        "activity_requirements": activity_req,
-        "methodologies": matched_methodologies,
-        "product_requirements": product_reqs
-    }
-
-# ─── Render Doc Card ───────────────────────────────────────────────────────────
-def render_doc(doc):
-    title = doc.get("title", "")
-    link = doc.get("link", "#")
-    desc = doc.get("description", "")
-    st.markdown(f"""
-    <div class="doc-card">
-        <div class="doc-title">📄 {title}</div>
-        <div class="doc-desc">{desc}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown(f"[🔗 Open Document]({link})")
-
-# ─── Hero ──────────────────────────────────────────────────────────────────────
+# ─── Header ───────────────────────────────────────────────────────────────────
 st.markdown("""
-<div class="hero-box">
-    <h1>🌿 Gold Standard Document Finder</h1>
-    <p>Describe your carbon project — get every Gold Standard document you need, instantly.</p>
+<div class="main-header">
+    <h1>🌿 Carbon Standards Document Finder</h1>
+    <p style="margin:0; opacity:0.9;">Find the exact documents you need for your nature-based carbon project</p>
+    <p style="margin:4px 0 0 0; opacity:0.75; font-size:0.85rem;">Supports Gold Standard · Verra/VCS · ICR</p>
 </div>
 """, unsafe_allow_html=True)
 
-# ─── Input ─────────────────────────────────────────────────────────────────────
-user_input = st.text_area(
-    "📝 Describe your project",
-    placeholder="e.g. I want to distribute improved cookstoves to rural households in Kenya...\ne.g. Solar mini-grid electrification in rural India\ne.g. Afforestation using native trees in degraded land in Brazil",
-    height=130
+# ─── Load API Key from Secrets ───────────────────────────────────────────────
+try:
+    api_key = st.secrets["OPENAI_API_KEY"]
+except Exception:
+    api_key = None
+
+# ─── Sidebar ─────────────────────────────────────────────────────────────────
+with st.sidebar:
+    st.header("ℹ️ About")
+    st.markdown("**🌿 Nature-Based Project Types:**")
+    st.markdown("• Afforestation / Reforestation")
+    st.markdown("• Soil Organic Carbon")
+    st.markdown("• Blue Carbon / Mangrove")
+    st.markdown("• REDD+ / Forest Conservation")
+    st.markdown("• Agriculture")
+    st.markdown("---")
+    st.markdown("**📚 Registries Covered:**")
+    st.markdown("• Gold Standard (GS4GG)")
+    st.markdown("• Verra / VCS")
+    st.markdown("• ICR")
+
+# ─── Main Interface ───────────────────────────────────────────────────────────
+st.markdown("## 🔍 Find Your Documents")
+
+input_mode = st.radio(
+    "How do you want to find documents?",
+    ["📋 Select from dropdowns", "💬 Describe your project (AI-powered)"],
+    horizontal=True
 )
 
-find_btn = st.button("🔍 Find My Documents", type="primary")
+# ─── Registry + Project Type Maps ─────────────────────────────────────────────
+REGISTRY_MAP = {
+    "🌟 Gold Standard (GS4GG)": "gold_standard",
+    "✅ Verra / VCS": "verra",
+    "🔷 International Carbon Registry (ICR)": "icr"
+}
 
-st.markdown("---")
+PROJECT_TYPE_MAP = {
+    "🌳 Afforestation / Reforestation (A/R)": "afforestation_reforestation",
+    "🌱 Soil Organic Carbon (SOC)": "soil_organic_carbon",
+    "🌊 Blue Carbon / Mangrove": "blue_carbon",
+    "🌲 REDD+ / Forest Conservation": "redd_plus",
+    "🌾 Agriculture (General)": "agriculture"
+}
 
-# ─── Results ───────────────────────────────────────────────────────────────────
-if find_btn:
-    if not user_input.strip():
-        st.warning("⚠️ Please describe your project first!")
-    else:
-        with st.spinner("🤔 Analyzing your project and finding relevant documents..."):
-            try:
-                analysis = analyze_project(user_input)
-                bundle = build_document_bundle(analysis)
+# ─── Mode 1: Dropdown ─────────────────────────────────────────────────────────
+if input_mode == "📋 Select from dropdowns":
+    col1, col2 = st.columns(2)
+    with col1:
+        registry_display = st.selectbox("1️⃣ Select Registry", list(REGISTRY_MAP.keys()))
+    with col2:
+        project_type_display = st.selectbox("2️⃣ Select Project Type", list(PROJECT_TYPE_MAP.keys()))
 
-                confidence = analysis.get("confidence", 0)
-                activity_type_raw = analysis.get("activity_type") or "Unknown"
-                activity_type = activity_type_raw.replace("_", " ").title()
-                secondary = analysis.get("secondary_activity_type")
-                summary = analysis.get("project_summary", "")
+    registry_key = REGISTRY_MAP[registry_display]
+    project_type_key = PROJECT_TYPE_MAP[project_type_display]
 
-                # ── Confidence-based methodology limiting ──
-                all_methodologies = bundle["methodologies"]
-                if confidence >= 0.7:
-                    methodologies_to_show = all_methodologies[:2]
-                    show_review_warning = False
-                else:
-                    methodologies_to_show = all_methodologies[:3]
-                    show_review_warning = True
+    if st.button("🔍 Find Documents", type="primary", use_container_width=True):
+        st.session_state["show_results"] = True
+        st.session_state["registry_key"] = registry_key
+        st.session_state["project_type_key"] = project_type_key
+        st.session_state["registry_display"] = registry_display
+        st.session_state["project_type_display"] = project_type_display
+        st.session_state["ai_summary"] = None
 
-                # Confidence badge
-                if confidence >= 0.75:
-                    badge = f'<span class="confidence-badge-high">✅ High Confidence {int(confidence*100)}%</span>'
-                elif confidence >= 0.5:
-                    badge = f'<span class="confidence-badge-medium">⚠️ Medium Confidence {int(confidence*100)}%</span>'
-                else:
-                    badge = f'<span class="confidence-badge-low">❗ Low Confidence {int(confidence*100)}%</span>'
-
-                # ── Safe secondary handling ──
-                secondary_label = ""
-                if secondary and secondary not in [None, "null", "", "none"]:
-                    secondary_label = f" – {secondary.replace('_', ' ').title()}"
-
-                # ── Trust Line ──
-                st.markdown(f"""
-                <div class="result-header">
-                    <div style="font-weight:700; font-size:1.05rem; color:#2d3748; margin-bottom:6px;">
-                        ✅ We've identified your project as:
-                        <span class="activity-tag">{activity_type}{secondary_label}</span>
-                        &nbsp;&nbsp;{badge}
-                    </div>
-                    <div style="color:#718096; font-size:0.88rem; margin-top:4px;">{summary}</div>
-                </div>
-                """, unsafe_allow_html=True)
-
-                if show_review_warning:
-                    reason = analysis.get("low_confidence_reason") or "Project description is too vague."
-                    st.warning(f"⚠️ Low confidence match — {reason}\n\nWe're showing you 3 methodology options. Please review carefully and pick the one that fits your project.")
-
-                # 🔴 MUST READ
-                st.markdown('<div class="section-red"><div class="section-title">🔴 Must Read — Required for ALL Projects</div><div style="color:#718096;font-size:0.85rem;">These documents apply to every Gold Standard project regardless of type.</div></div>', unsafe_allow_html=True)
-
-                with st.expander("📚 Core Documents", expanded=True):
-                    for doc in bundle["core_documents"]:
-                        render_doc(doc)
-
-                with st.expander("🛠️ SDG Impact Tools", expanded=True):
-                    for doc in bundle["sdg_tools"]:
-                        render_doc(doc)
-
-                with st.expander("📐 Additionality, Baseline & Leakage Requirements", expanded=False):
-                    for doc in bundle["methodology_procedures"]:
-                        render_doc(doc)
-
-                # 🟡 BASED ON YOUR PROJECT
-                st.markdown('<div class="section-yellow"><div class="section-title">🟡 Based On Your Project — Filtered for You</div><div style="color:#718096;font-size:0.85rem;">These documents are selected based on your project type and activity.</div></div>', unsafe_allow_html=True)
-
-                with st.expander("📋 Activity Requirements", expanded=True):
-                    if bundle["activity_requirements"]:
-                        for doc in bundle["activity_requirements"]:
-                            render_doc(doc)
-                    else:
-                        st.info("No specific activity requirement matched. Check the full list at globalgoals.goldstandard.org")
-
-                method_label = "top 2 — high confidence" if confidence >= 0.7 else "top 3 — please review carefully"
-                with st.expander(f"🔬 Suggested Methodologies ({len(methodologies_to_show)} shown — {method_label})", expanded=True):
-                    if methodologies_to_show:
-                        for doc in methodologies_to_show:
-                            render_doc(doc)
-                    else:
-                        st.info("No specific methodology matched. Try adding more detail — e.g. crop type, technology used, or scale of project.")
-
-                # 🟢 FOR PROJECT COMPLETION
-                st.markdown('<div class="section-green"><div class="section-title">🟢 For Project Completion — Review Which Apply</div><div style="color:#718096;font-size:0.85rem;">These may be required depending on your project stage and structure.</div></div>', unsafe_allow_html=True)
-
-                with st.expander("📦 Product Requirements", expanded=False):
-                    if bundle["product_requirements"]:
-                        st.caption("ℹ️ Review which of these apply to your specific project stage.")
-                        for doc in bundle["product_requirements"]:
-                            render_doc(doc)
-
-                st.markdown("---")
-                st.caption("📌 This tool provides guidance only. Always verify with official Gold Standard documentation at [globalgoals.goldstandard.org](https://globalgoals.goldstandard.org).")
-
-            except json.JSONDecodeError:
-                st.error("❌ Could not parse AI response. Try rephrasing your project description.")
-            except Exception as e:
-                st.error(f"❌ Something went wrong: {str(e)}")
-
-# ─── Empty State ───────────────────────────────────────────────────────────────
+# ─── Mode 2: AI Description ───────────────────────────────────────────────────
 else:
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.info("💡 **Example Projects**\n\n- Cookstoves in Kenya\n- Solar mini-grid India\n- Mangrove restoration\n- Biochar from rice husk")
-    with c2:
-        st.info("📂 **What You'll Get**\n\n- 🔴 Core docs (always required)\n- 🟡 Activity & methodology docs\n- 🟢 Product completion docs")
-    with c3:
-        st.info("⚡ **How It Works**\n\n1. Describe your project\n2. AI identifies type\n3. Relevant docs shown\n4. Click to open each doc")
+    project_description = st.text_area(
+        "Describe your project in plain English",
+        placeholder="E.g., Mangrove restoration project in coastal Odisha, India...",
+        height=100
+    )
+
+    col_reg, col_hint = st.columns([1, 2])
+    with col_reg:
+        override_registry = st.selectbox(
+            "Registry (optional)",
+            ["🤖 Auto-detect (recommended)", "🌟 Gold Standard (GS4GG)", "✅ Verra / VCS", "🔷 ICR"],
+            help="Leave on Auto-detect to let AI pick the best registry. Select manually if you already know."
+        )
+    with col_hint:
+        st.markdown("<div style='padding-top:32px; color:#555; font-size:0.85rem;'>💡 If you don't select a registry, our AI will automatically choose the most suitable one based on your project description.</div>", unsafe_allow_html=True)
+
+    OVERRIDE_REGISTRY_MAP = {
+        "🌟 Gold Standard (GS4GG)": "gold_standard",
+        "✅ Verra / VCS": "verra",
+        "🔷 ICR": "icr"
+    }
+
+    if st.button("🤖 Analyse & Find Documents", type="primary", use_container_width=True):
+        if not api_key:
+            st.error("⚠️ AI analysis is temporarily unavailable. Please use the dropdown mode or contact support.")
+        elif not project_description.strip():
+            st.warning("⚠️ Please describe your project first.")
+        else:
+            with st.spinner("🤖 Analysing your project..."):
+                success = False
+                last_error = None
+
+                client = OpenAI(
+                    api_key=api_key,
+                    http_client=httpx.Client(timeout=10.0)
+                )
+
+                for attempt in range(2):
+                    try:
+                        response = client.chat.completions.create(
+                            model="gpt-4.1",
+                            messages=[
+                                {
+                                    "role": "system",
+                                    "content": """You are an expert in carbon standards and nature-based climate projects.
+
+Your job is to classify the project into the best registry and correct project type.
+
+### Registry Selection Rules:
+- Use "gold_standard" for:
+  - community-based or smallholder projects
+  - SDG-focused or social impact projects
+  - blue carbon / mangrove restoration
+  - soil organic carbon / agriculture (small to mid scale)
+
+- Use "verra" for:
+  - large-scale forestry or REDD+ projects
+  - corporate or industrial carbon projects
+  - avoided deforestation at scale
+  - tidal wetland / seagrass restoration (large scale)
+
+- Use "icr" for:
+  - smaller or flexible projects
+  - when project does not clearly fit GS or Verra criteria
+  - projects needing simpler registration process
+
+### Project Type Rules:
+- "afforestation_reforestation" → planting trees, forest restoration, revegetation
+- "soil_organic_carbon" → farming practices, soil improvement, tillage, cover crops
+- "blue_carbon" → mangroves, coastal wetlands, seagrass, tidal ecosystems
+- "redd_plus" → avoided deforestation, forest conservation, protecting existing forests
+- "agriculture" → general farming, rice cultivation, biochar, microbial soil methods
+
+### Output Format (STRICT — RAW JSON ONLY, NO MARKDOWN):
+{
+  "registry": "gold_standard" | "verra" | "icr",
+  "project_type": "afforestation_reforestation" | "soil_organic_carbon" | "blue_carbon" | "redd_plus" | "agriculture",
+  "confidence": <float 0.0 to 1.0>,
+  "reasoning": "<one sentence: why this registry and type>",
+  "suggested_registry_display": "<human readable registry name>",
+  "suggested_type_display": "<human readable project type>"
+}"""
+                                },
+                                {
+                                    "role": "user",
+                                    "content": "Mangrove restoration project in coastal Odisha, India with community involvement and SDG targets"
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": '{"registry": "gold_standard", "project_type": "blue_carbon", "confidence": 0.95, "reasoning": "Community-based mangrove restoration with SDG focus aligns best with Gold Standard blue carbon methodology.", "suggested_registry_display": "Gold Standard (GS4GG)", "suggested_type_display": "Blue Carbon / Mangrove"}'
+                                },
+                                {
+                                    "role": "user",
+                                    "content": "Large scale avoided deforestation project in Amazon basin, corporate funded"
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": '{"registry": "verra", "project_type": "redd_plus", "confidence": 0.95, "reasoning": "Large-scale corporate avoided deforestation in Amazon is a classic Verra REDD+ use case.", "suggested_registry_display": "Verra / VCS", "suggested_type_display": "REDD+ / Forest Conservation"}'
+                                },
+                                {
+                                    "role": "user",
+                                    "content": "Smallholder farmers adopting zero tillage and cover crops in Madhya Pradesh"
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": '{"registry": "gold_standard", "project_type": "soil_organic_carbon", "confidence": 0.90, "reasoning": "Smallholder soil carbon project using zero tillage and cover crops fits Gold Standard SOC methodology.", "suggested_registry_display": "Gold Standard (GS4GG)", "suggested_type_display": "Soil Organic Carbon (SOC)"}'
+                                },
+                                {
+                                    "role": "user",
+                                    "content": "Tree plantation project on degraded land in Rajasthan"
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": '{"registry": "gold_standard", "project_type": "afforestation_reforestation", "confidence": 0.90, "reasoning": "Tree plantation on degraded land aligns with afforestation under Gold Standard.", "suggested_registry_display": "Gold Standard (GS4GG)", "suggested_type_display": "Afforestation / Reforestation (A/R)"}'
+                                },
+                                {
+                                    "role": "user",
+                                    "content": "Rice paddy methane reduction through alternate wetting and drying in Punjab"
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": '{"registry": "gold_standard", "project_type": "agriculture", "confidence": 0.88, "reasoning": "Rice cultivation methane reduction via water management is covered under Gold Standard agriculture methodology.", "suggested_registry_display": "Gold Standard (GS4GG)", "suggested_type_display": "Agriculture (General)"}'
+                                },
+                                {
+                                    "role": "user",
+                                    "content": project_description
+                                }
+                            ],
+                            temperature=0.1
+                        )
+
+                        raw = response.choices[0].message.content.strip()
+                        raw = raw.replace("```json", "").replace("```", "").strip()
+                        raw = re.sub(r",\s*}", "}", raw)
+                        raw = re.sub(r",\s*]", "]", raw)
+                        result = json.loads(raw)
+
+                        registry_key = result.get("registry", "gold_standard")
+                        project_type_key = result.get("project_type", "afforestation_reforestation")
+
+                        # Override registry if user manually selected one
+                        if override_registry != "🤖 Auto-detect (recommended)":
+                            registry_key = OVERRIDE_REGISTRY_MAP.get(override_registry, registry_key)
+
+                        if registry_key not in db:
+                            registry_key = "gold_standard"
+                        project_types = db[registry_key].get("project_types", {})
+                        if project_type_key not in project_types:
+                            project_type_key = list(project_types.keys())[0] if project_types else "afforestation_reforestation"
+
+                        st.session_state["show_results"] = True
+                        st.session_state["registry_key"] = registry_key
+                        st.session_state["project_type_key"] = project_type_key
+                        # If user overrode registry, show that name; else use AI suggestion
+                        if override_registry != "🤖 Auto-detect (recommended)":
+                            st.session_state["registry_display"] = override_registry
+                        else:
+                            st.session_state["registry_display"] = result.get("suggested_registry_display", registry_key)
+                        st.session_state["project_type_display"] = result.get("suggested_type_display", project_type_key)
+                        st.session_state["ai_summary"] = result
+                        success = True
+                        break
+
+                    except json.JSONDecodeError:
+                        last_error = "AI returned invalid response."
+                    except Exception as e:
+                        last_error = str(e)
+
+                if not success:
+                    st.warning(f"⚠️ AI analysis failed ({last_error}). Showing default documents — please refine manually.")
+                    st.session_state["show_results"] = True
+                    st.session_state["registry_key"] = "gold_standard"
+                    st.session_state["project_type_key"] = "afforestation_reforestation"
+                    st.session_state["registry_display"] = "🌟 Gold Standard (GS4GG)"
+                    st.session_state["project_type_display"] = "🌳 Afforestation / Reforestation (A/R)"
+                    st.session_state["ai_summary"] = None
+
+# ─── Safe Card Renderer ───────────────────────────────────────────────────────
+def render_doc_card(doc, card_type="doc"):
+    title = doc.get("title", "Untitled Document")
+    link = doc.get("link", "#")
+    desc = doc.get("description", "")
+
+    css_class = {
+        "core": "core-card",
+        "methodology": "methodology-card",
+        "template": "template-card",
+        "other": "doc-card"
+    }.get(card_type, "doc-card")
+
+    st.markdown(f"""
+    <div class="{css_class}">
+        <strong><a href="{link}" target="_blank">{title}</a></strong><br>
+        <small style="color:#666">{desc}</small>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+# ─── Export Builders ──────────────────────────────────────────────────────────
+def build_checklist_markdown(registry_display, project_type_display, registry_data, project_data, registry_key, db):
+    """Build a clean markdown checklist string for download."""
+    lines = []
+    now = datetime.now().strftime("%d %b %Y, %H:%M")
+
+    lines.append(f"# 📋 Carbon Project Document Checklist")
+    lines.append(f"")
+    lines.append(f"**Registry:** {registry_display}")
+    lines.append(f"**Project Type:** {project_type_display}")
+    lines.append(f"**Generated:** {now}")
+    lines.append(f"")
+    lines.append(f"---")
+    lines.append(f"")
+    lines.append(f"> Use this checklist to track which documents you have reviewed and submitted.")
+    lines.append(f"")
+
+    # SDG Tool (GS only)
+    if registry_key == "gold_standard" and "sdg_tool" in db.get("gold_standard", {}):
+        sdg = db["gold_standard"]["sdg_tool"]
+        lines.append(f"## 🎯 SDG Impact Tool (Required for ALL GS Projects)")
+        lines.append(f"")
+        lines.append(f"- [ ] [{sdg.get('title', '')}]({sdg.get('link', '#')})")
+        lines.append(f"  - *{sdg.get('description', '')}*")
+        lines.append(f"")
+
+    # Core Documents
+    core_docs = registry_data.get("core_documents", [])
+    if core_docs:
+        lines.append(f"## 🔴 Core Documents — Required for ALL Projects")
+        lines.append(f"")
+        for doc in core_docs:
+            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
+            lines.append(f"  - *{doc.get('description', '')}*")
+        lines.append(f"")
+
+    # Activity Requirements
+    activity_reqs = project_data.get("activity_requirements", [])
+    if activity_reqs:
+        lines.append(f"## 🟡 Activity Requirements")
+        lines.append(f"")
+        for doc in activity_reqs:
+            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
+            lines.append(f"  - *{doc.get('description', '')}*")
+        lines.append(f"")
+
+    # Methodologies
+    methodologies = project_data.get("methodologies", [])
+    if methodologies:
+        lines.append(f"## 🟢 Methodologies")
+        lines.append(f"")
+        for doc in methodologies:
+            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
+            lines.append(f"  - *{doc.get('description', '')}*")
+        lines.append(f"")
+
+    # Templates
+    templates = project_data.get("templates", [])
+    if templates:
+        lines.append(f"## 📋 Templates")
+        lines.append(f"")
+        for doc in templates:
+            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
+            lines.append(f"  - *{doc.get('description', '')}*")
+        lines.append(f"")
+
+    # Other Docs
+    other_docs = project_data.get("other_docs", [])
+    if other_docs:
+        lines.append(f"## 📎 Other Important Documents")
+        lines.append(f"")
+        for doc in other_docs:
+            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
+            lines.append(f"  - *{doc.get('description', '')}*")
+        lines.append(f"")
+
+    lines.append(f"---")
+    lines.append(f"*Generated by Carbon Standards Document Finder · Flora Carbon*")
+
+    return "\n".join(lines)
+
+
+def build_checklist_csv(registry_display, project_type_display, registry_data, project_data, registry_key, db):
+    """Build a CSV string for download."""
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow(["Section", "Document Title", "Description", "Link", "Status"])
+
+    # SDG Tool
+    if registry_key == "gold_standard" and "sdg_tool" in db.get("gold_standard", {}):
+        sdg = db["gold_standard"]["sdg_tool"]
+        writer.writerow(["SDG Impact Tool", sdg.get("title", ""), sdg.get("description", ""), sdg.get("link", ""), "☐ Pending"])
+
+    for doc in registry_data.get("core_documents", []):
+        writer.writerow(["Core Document", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
+
+    for doc in project_data.get("activity_requirements", []):
+        writer.writerow(["Activity Requirement", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
+
+    for doc in project_data.get("methodologies", []):
+        writer.writerow(["Methodology", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
+
+    for doc in project_data.get("templates", []):
+        writer.writerow(["Template", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
+
+    for doc in project_data.get("other_docs", []):
+        writer.writerow(["Other Document", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
+
+    return output.getvalue()
+
+
+def count_total_docs(registry_data, project_data, registry_key, db):
+    """Count total documents for this selection."""
+    total = 0
+    if registry_key == "gold_standard" and "sdg_tool" in db.get("gold_standard", {}):
+        total += 1
+    total += len(registry_data.get("core_documents", []))
+    total += len(project_data.get("activity_requirements", []))
+    total += len(project_data.get("methodologies", []))
+    total += len(project_data.get("templates", []))
+    total += len(project_data.get("other_docs", []))
+    return total
+
+
+# ─── Results ──────────────────────────────────────────────────────────────────
+if st.session_state.get("show_results"):
+    with st.spinner("📄 Loading documents..."):
+        registry_key = st.session_state["registry_key"]
+        project_type_key = st.session_state["project_type_key"]
+        registry_data = db.get(registry_key, {})
+        project_data = registry_data.get("project_types", {}).get(project_type_key, {})
+
+    st.markdown("---")
+    st.markdown(f"## 📄 Documents for: **{st.session_state['project_type_display']}** under **{st.session_state['registry_display']}**")
+
+    # #1 Registry website link
+    registry_website = registry_data.get("website", "#")
+    st.markdown(f"🌐 [Visit Official Registry Website]({registry_website})", unsafe_allow_html=False)
+
+    # #2 Empty state check
+    if not project_data:
+        st.warning("⚠️ No documents found for this selection. Please try another combination.")
+        st.stop()
+
+    # AI Summary box
+    if st.session_state.get("ai_summary"):
+        ai = st.session_state["ai_summary"]
+        confidence_pct = int(float(ai.get("confidence", 0)) * 100)
+        confidence_color = "#4caf50" if confidence_pct >= 70 else "#ff9800"
+        st.markdown(f"""
+        <div class="ai-analysis">
+            🤖 <strong>AI Analysis</strong> &nbsp;|&nbsp;
+            Confidence: <span style="color:{confidence_color}; font-weight:bold">{confidence_pct}%</span><br>
+            <small>{ai.get('reasoning', '')}</small>
+        </div>
+        """, unsafe_allow_html=True)
+        if confidence_pct < 70:
+            st.warning("⚠️ Confidence is below 70%. Please review the document selection carefully.")
+        st.info("📌 These documents are required based on the registry standards and methodology for your selected project type. Core documents apply to all projects; methodologies and templates are specific to this activity.")
+    else:
+        st.info("📌 Documents shown are based on your selected registry and project type. Core documents are required for all projects under this registry; methodologies and templates are specific to this activity type.")
+
+    # ─── Export / Checklist Section ───────────────────────────────────────────
+    total_docs = count_total_docs(registry_data, project_data, registry_key, db)
+    registry_display_clean = st.session_state["registry_display"].replace("🌟 ", "").replace("✅ ", "").replace("🔷 ", "")
+    project_display_clean = st.session_state["project_type_display"].replace("🌳 ", "").replace("🌱 ", "").replace("🌊 ", "").replace("🌲 ", "").replace("🌾 ", "")
+    safe_name = f"{registry_display_clean}_{project_display_clean}".replace(" ", "_").replace("/", "-").replace("(", "").replace(")", "")
+
+    st.markdown(f"""
+    <div class="export-box">
+        <strong>📥 Export Your Document Checklist</strong> &nbsp;·&nbsp;
+        <span style="color:#166534">{total_docs} documents found</span><br>
+        <small style="color:#555">Download as Markdown checklist or CSV spreadsheet to track your project documentation.</small>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col_md, col_csv = st.columns(2)
+
+    with col_md:
+        md_content = build_checklist_markdown(
+            st.session_state["registry_display"],
+            st.session_state["project_type_display"],
+            registry_data, project_data, registry_key, db
+        )
+        st.download_button(
+            label="⬇️ Download Checklist (.md)",
+            data=md_content,
+            file_name=f"checklist_{safe_name}.md",
+            mime="text/markdown",
+            use_container_width=True
+        )
+
+    with col_csv:
+        csv_content = build_checklist_csv(
+            st.session_state["registry_display"],
+            st.session_state["project_type_display"],
+            registry_data, project_data, registry_key, db
+        )
+        st.download_button(
+            label="⬇️ Download Checklist (.csv)",
+            data=csv_content,
+            file_name=f"checklist_{safe_name}.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+
+    # ─── Document Sections ────────────────────────────────────────────────────
+
+    # SDG Tool (GS only)
+    if registry_key == "gold_standard" and "sdg_tool" in db["gold_standard"]:
+        sdg = db["gold_standard"]["sdg_tool"]
+        st.markdown("""<div class="section-header">🎯 SDG Impact Tool (Required for ALL GS Projects)</div>""", unsafe_allow_html=True)
+        render_doc_card(sdg, "core")
+
+    # Core Documents
+    core_docs = registry_data.get("core_documents", [])
+    if core_docs:
+        st.markdown(f"""<div class="section-header">🔴 Core Documents — Required for ALL {registry_data.get('display_name', '')} Projects ({len(core_docs)})</div>""", unsafe_allow_html=True)
+        for doc in core_docs:
+            render_doc_card(doc, "core")
+    else:
+        st.info("No core documents found for this registry.")
+
+    # Activity Requirements
+    activity_reqs = project_data.get("activity_requirements", [])
+    if activity_reqs:
+        st.markdown(f"""<div class="section-header">🟡 Activity Requirements — Specific to This Project Type ({len(activity_reqs)})</div>""", unsafe_allow_html=True)
+        for doc in activity_reqs:
+            render_doc_card(doc, "doc")
+
+    # Methodologies
+    methodologies = project_data.get("methodologies", [])
+    if methodologies:
+        st.markdown(f"""<div class="section-header">🟢 Methodologies ({len(methodologies)})</div>""", unsafe_allow_html=True)
+        for doc in methodologies:
+            render_doc_card(doc, "methodology")
+    else:
+        st.info("No methodologies listed for this project type.")
+
+    # Templates
+    templates = project_data.get("templates", [])
+    if templates:
+        st.markdown(f"""<div class="section-header">📋 Templates ({len(templates)})</div>""", unsafe_allow_html=True)
+        with st.expander(f"View {len(templates)} Templates", expanded=False):
+            for doc in templates:
+                render_doc_card(doc, "template")
+    else:
+        st.info("No templates found for this project type.")
+
+    # Other Docs
+    other_docs = project_data.get("other_docs", [])
+    if other_docs:
+        st.markdown(f"""<div class="section-header">📎 Other Important Documents ({len(other_docs)})</div>""", unsafe_allow_html=True)
+        for doc in other_docs:
+            render_doc_card(doc, "other")
+
+    st.markdown("---")
+    st.caption("💡 All links open the latest publicly available version from the official registry website.")
+
+    # Reset button
+    if st.button("🔄 Search Again", use_container_width=True):
+        st.session_state["show_results"] = False
+        st.session_state["ai_summary"] = None
+        st.rerun()
