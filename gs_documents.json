@@ -1,406 +1,801 @@
 {
-  "core_documents": [
-    {
-      "title": "Principles & Requirements",
-      "link": "https://globalgoals.goldstandard.org/101-par-principles-requirements/",
-      "description": "Foundation document — required for ALL projects"
+  "gold_standard": {
+    "display_name": "Gold Standard (GS4GG)",
+    "website": "https://globalgoals.goldstandard.org",
+    "core_documents": [
+      {
+        "title": "Principles & Requirements",
+        "link": "https://globalgoals.goldstandard.org/101-par-principles-requirements/",
+        "description": "Foundation document — required for ALL GS projects"
+      },
+      {
+        "title": "Stakeholder Consultation & Engagement Requirements",
+        "link": "https://globalgoals.goldstandard.org/102-par-stakeholder-consultation-requirements/",
+        "description": "Community engagement rules for all projects"
+      },
+      {
+        "title": "Safeguarding Principles & Requirements",
+        "link": "https://globalgoals.goldstandard.org/103-par-safeguarding-principles-requirements/",
+        "description": "Social & environmental safeguards"
+      },
+      {
+        "title": "Gender Equality Requirements & Guidelines",
+        "link": "https://globalgoals.goldstandard.org/104-par-gender-equality-requirements-and-guidelines/",
+        "description": "Gender considerations for all projects"
+      },
+      {
+        "title": "Validation and Verification Standard",
+        "link": "https://globalgoals.goldstandard.org/113-par-validation-and-verification-standard/",
+        "description": "V&V requirements for all projects"
+      }
+    ],
+    "project_types": {
+      "afforestation_reforestation": {
+        "display_name": "Afforestation / Reforestation (A/R)",
+        "activity_requirements": [
+          {
+            "title": "Land-use & Forests Activity Requirements",
+            "link": "https://globalgoals.goldstandard.org/203-ar-luf-activity-requirements/",
+            "description": "Eligibility requirements for forestry & A/R projects"
+          }
+        ],
+        "methodologies": [
+          {
+            "title": "Afforestation-Reforestation GHG Emissions Reductions & Sequestration Methodology",
+            "link": "https://globalgoals.goldstandard.org/403-luf-ar-methodology-ghgs-emission-reduction-and-sequestration-methodology/",
+            "description": "Main methodology for A/R projects"
+          }
+        ],
+        "templates": [
+          {
+            "title": "Project Design Document (PDD)",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-design-document/",
+            "description": "Main project design template"
+          },
+          {
+            "title": "Monitoring Report",
+            "link": "https://globalgoals.goldstandard.org/t-perfcert-monitoring-report/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "Stakeholder Consultation Report",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-stakeholder-consultation-report/",
+            "description": "Stakeholder consultation template"
+          },
+          {
+            "title": "Risks and Capacities Assessment Report – LUF and BCFW",
+            "link": "https://globalgoals.goldstandard.org/t-rc-luf_bcfw_risks-capacities-assessment-report/",
+            "description": "Risk assessment template for land-use & forestry projects"
+          },
+          {
+            "title": "Preliminary Review Submission",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-preliminary-review-request-form/",
+            "description": "Preliminary review form"
+          }
+        ]
+      },
+      "soil_organic_carbon": {
+        "display_name": "Soil Organic Carbon (SOC)",
+        "activity_requirements": [
+          {
+            "title": "Agriculture Activity Requirements",
+            "link": "https://globalgoals.goldstandard.org/206_ar_agr_agriculture-activity-requirements/",
+            "description": "Eligibility requirements for agriculture & SOC projects"
+          }
+        ],
+        "methodologies": [
+          {
+            "title": "Soil Organic Carbon Framework Methodology",
+            "link": "https://globalgoals.goldstandard.org/402-luf-agr-fm-soil-organic-carbon-framework-methodolgy/",
+            "description": "Main SOC framework methodology"
+          },
+          {
+            "title": "SOC Model Requirements and Guidelines",
+            "link": "https://globalgoals.goldstandard.org/402-7_soil-organic-carbon-model-requirements-and-guidelines/",
+            "description": "Guidelines for SOC modelling"
+          },
+          {
+            "title": "SOC Activity Module – Zero Tillage",
+            "link": "https://globalgoals.goldstandard.org/402-4-luf-agr-am-soc-module-zero-tillage/",
+            "description": "Zero tillage activity module"
+          },
+          {
+            "title": "SOC Activity Module – Improved Tillage",
+            "link": "https://globalgoals.goldstandard.org/402-1-luf-agr-am-soc-module-improved-tillage/",
+            "description": "Improved tillage activity module"
+          },
+          {
+            "title": "SOC Activity Module – Cover Crops",
+            "link": "https://globalgoals.goldstandard.org/402-6-luf-agram-soc-module-cover-crops/",
+            "description": "Cover crops activity module"
+          },
+          {
+            "title": "SOC Activity Module – Managed Pasture",
+            "link": "https://globalgoals.goldstandard.org/402-5-luf-agr-am-soc-module-managed-pastures/",
+            "description": "Managed pasture activity module"
+          },
+          {
+            "title": "SOC Activity Module – Biostimulants",
+            "link": "https://globalgoals.goldstandard.org/402-3-luf-agr-am-soc-module-biostimulants-for-soil-revitalisation/",
+            "description": "Biostimulants for soil revitalisation module"
+          }
+        ],
+        "templates": [
+          {
+            "title": "Project Design Document (PDD)",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-design-document/",
+            "description": "Main project design template"
+          },
+          {
+            "title": "Monitoring Report",
+            "link": "https://globalgoals.goldstandard.org/t-perfcert-monitoring-report/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "Stakeholder Consultation Report",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-stakeholder-consultation-report/",
+            "description": "Stakeholder consultation template"
+          },
+          {
+            "title": "SOC Activity Module Template",
+            "link": "https://globalgoals.goldstandard.org/soil-organic-carbon-activity-module-template/",
+            "description": "Template for developing new SOC activity modules"
+          },
+          {
+            "title": "Preliminary Review Submission",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-preliminary-review-request-form/",
+            "description": "Preliminary review form"
+          }
+        ]
+      },
+      "blue_carbon": {
+        "display_name": "Blue Carbon / Mangrove",
+        "activity_requirements": [
+          {
+            "title": "Blue Carbon and Freshwater Wetlands Activity Requirements",
+            "link": "https://globalgoals.goldstandard.org/204-ar-bcfw-blue-carbon-and-freshwater-wetlands-activity-requirements/",
+            "description": "Eligibility requirements for blue carbon & wetland projects"
+          }
+        ],
+        "methodologies": [
+          {
+            "title": "Sustainable Management of Mangroves Methodology",
+            "link": "https://globalgoals.goldstandard.org/443-bcfw-methodology-sustainable-management-of-mangroves/",
+            "description": "Methodology for mangrove restoration projects"
+          }
+        ],
+        "templates": [
+          {
+            "title": "Project Design Document (PDD)",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-design-document/",
+            "description": "Main project design template"
+          },
+          {
+            "title": "Monitoring Report",
+            "link": "https://globalgoals.goldstandard.org/t-perfcert-monitoring-report/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "Stakeholder Consultation Report",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-stakeholder-consultation-report/",
+            "description": "Stakeholder consultation template"
+          },
+          {
+            "title": "Risks and Capacities Assessment Report – LUF and BCFW",
+            "link": "https://globalgoals.goldstandard.org/t-rc-luf_bcfw_risks-capacities-assessment-report/",
+            "description": "Risk assessment template for blue carbon projects"
+          },
+          {
+            "title": "Preliminary Review Submission",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-preliminary-review-request-form/",
+            "description": "Preliminary review form"
+          }
+        ]
+      },
+      "agriculture": {
+        "display_name": "Agriculture (General / Biochar)",
+        "activity_requirements": [
+          {
+            "title": "Agriculture Activity Requirements",
+            "link": "https://globalgoals.goldstandard.org/206_ar_agr_agriculture-activity-requirements/",
+            "description": "Eligibility requirements for agriculture projects"
+          }
+        ],
+        "methodologies": [
+          {
+            "title": "Methane Emission Reduction – Rice Cultivation (AWM)",
+            "link": "https://globalgoals.goldstandard.org/437-luf-agr-methane-emission-awm-practice-in-rice/",
+            "description": "Methodology for water management in rice cultivation"
+          },
+          {
+            "title": "Microbial Carbon di-oxide Mineralisation",
+            "link": "https://globalgoals.goldstandard.org/458_paa-m400-04_microbial-carbon-di-oxide-mineralisation/",
+            "description": "Microbial CO2 mineralisation methodology"
+          }
+        ],
+        "templates": [
+          {
+            "title": "Project Design Document (PDD)",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-design-document/",
+            "description": "Main project design template"
+          },
+          {
+            "title": "Monitoring Report",
+            "link": "https://globalgoals.goldstandard.org/t-perfcert-monitoring-report/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "Stakeholder Consultation Report",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-stakeholder-consultation-report/",
+            "description": "Stakeholder consultation template"
+          },
+          {
+            "title": "Preliminary Review Submission",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-preliminary-review-request-form/",
+            "description": "Preliminary review form"
+          }
+        ]
+      },
+      "redd_plus": {
+        "display_name": "REDD+ / Forest Conservation",
+        "activity_requirements": [
+          {
+            "title": "Land-use & Forests Activity Requirements",
+            "link": "https://globalgoals.goldstandard.org/203-ar-luf-activity-requirements/",
+            "description": "Eligibility requirements for land-use & forest projects"
+          }
+        ],
+        "methodologies": [
+          {
+            "title": "Gold Standard Eligible Impact Quantification Methodologies",
+            "link": "https://globalgoals.goldstandard.org/427-list-of-eligible-cdm-gs-methodologies/",
+            "description": "List of all eligible methodologies including REDD+"
+          }
+        ],
+        "templates": [
+          {
+            "title": "Project Design Document (PDD)",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-design-document/",
+            "description": "Main project design template"
+          },
+          {
+            "title": "Monitoring Report",
+            "link": "https://globalgoals.goldstandard.org/t-perfcert-monitoring-report/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "Stakeholder Consultation Report",
+            "link": "https://globalgoals.goldstandard.org/t-prereview-stakeholder-consultation-report/",
+            "description": "Stakeholder consultation template"
+          },
+          {
+            "title": "Risks and Capacities Assessment Report – LUF and BCFW",
+            "link": "https://globalgoals.goldstandard.org/t-rc-luf_bcfw_risks-capacities-assessment-report/",
+            "description": "Risk assessment template for land-use projects"
+          }
+        ]
+      }
     },
-    {
-      "title": "Stakeholder Consultation and Engagement Requirements",
-      "link": "https://globalgoals.goldstandard.org/102-par-stakeholder-consultation-requirements/",
-      "description": "Mandatory stakeholder engagement rules"
-    },
-    {
-      "title": "Safeguarding Principles & Requirements",
-      "link": "https://globalgoals.goldstandard.org/103-par-safeguarding-principles-requirements/",
-      "description": "Do no harm principles — required for all projects"
-    },
-    {
-      "title": "Gender Equality Requirements & Guidelines",
-      "link": "https://globalgoals.goldstandard.org/104-par-gender-equality-requirements-and-guidelines/",
-      "description": "Gender inclusion requirements"
-    },
-    {
-      "title": "Claims Guidelines",
-      "link": "https://globalgoals.goldstandard.org/105-par-claims-guidelines/",
-      "description": "How to make claims about your project"
-    },
-    {
-      "title": "Requirements for Paris Agreement Alignment",
-      "link": "https://globalgoals.goldstandard.org/119_paa_pr_100-01-requirements-paris-agreement-alignment/",
-      "description": "Paris Agreement alignment requirements"
-    },
-    {
-      "title": "Validation and Verification Standard",
-      "link": "https://globalgoals.goldstandard.org/113-par-validation-and-verification-standard/",
-      "description": "Standards for validation and verification process"
-    },
-    {
-      "title": "Requirements for selection of Monitoring Indicators in the SDG Impact Tool",
-      "link": "https://globalgoals.goldstandard.org/118_par_requirements-for-monitoring-indicator-selection/",
-      "description": "How to select SDG monitoring indicators"
-    }
-  ],
-
-  "sdg_tools": [
-    {
-      "title": "Digital SDG Impact Tool",
-      "link": "https://globalgoals.goldstandard.org/430-iq-sdg-impact-tool-app/",
-      "description": "Digital tool to assess and report SDG impacts — required for all projects"
-    },
-    {
-      "title": "SDG Impact Tool (Manual)",
+    "sdg_tool": {
+      "title": "SDG Impact Tool",
       "link": "https://globalgoals.goldstandard.org/430-iq-sdg-impact-tool/",
-      "description": "Manual version of the SDG impact assessment tool"
-    },
-    {
-      "title": "Gold Standard Eligible Impact Quantification Methodologies",
-      "link": "https://globalgoals.goldstandard.org/427-list-of-eligible-cdm-gs-methodologies/",
-      "description": "Full list of eligible methodologies — useful for all projects"
-    }
-  ],
-
-  "activity_requirements": {
-    "agriculture": {
-      "title": "Agriculture Activity Requirements",
-      "link": "https://globalgoals.goldstandard.org/206_ar_agr_agriculture-activity-requirements/",
-      "description": "Requirements specific to agriculture projects"
-    },
-    "forestry": {
-      "title": "Land-use & Forests Activity Requirements",
-      "link": "https://globalgoals.goldstandard.org/203-ar-luf-activity-requirements/",
-      "description": "Requirements for land-use and forestry projects"
-    },
-    "renewable_energy": {
-      "title": "Renewable Energy Activity Requirements",
-      "link": "https://globalgoals.goldstandard.org/202-ar-renewable-energy-activity-requirements/",
-      "description": "Requirements for renewable energy projects"
-    },
-    "community_services": {
-      "title": "Community Services Activity Requirements",
-      "link": "https://globalgoals.goldstandard.org/201-ar-community-services-activity-requirements/",
-      "description": "Requirements for community service projects like cookstoves, water"
-    },
-    "blue_carbon": {
-      "title": "Blue Carbon and Freshwater Wetlands Activity Requirements",
-      "link": "https://globalgoals.goldstandard.org/204-ar-bcfw-blue-carbon-and-freshwater-wetlands-activity-requirements/",
-      "description": "Requirements for blue carbon, mangrove and wetland projects"
-    },
-    "engineered_removals": {
-      "title": "Engineered Removals Activity Requirements",
-      "link": "https://globalgoals.goldstandard.org/205_ar_engineered-removals/",
-      "description": "Requirements for engineered carbon removal projects (biochar, CCS etc.)"
-    },
-    "waste": {
-      "title": "Community Services Activity Requirements",
-      "link": "https://globalgoals.goldstandard.org/201-ar-community-services-activity-requirements/",
-      "description": "Requirements applicable to waste management projects"
+      "description": "Required for ALL GS projects — maps project impact to UN SDGs"
     }
   },
-
-  "methodologies": [
-    {
-      "id": "soc_framework",
-      "name": "Soil Organic Carbon Framework Methodology",
-      "activity_types": ["agriculture", "forestry"],
-      "keywords": ["soil", "carbon", "tillage", "agriculture", "farming", "crop", "pasture"],
-      "link": "https://globalgoals.goldstandard.org/402-luf-agr-fm-soil-organic-carbon-framework-methodolgy/",
-      "description": "Framework for soil organic carbon projects"
-    },
-    {
-      "id": "soc_zero_tillage",
-      "name": "Soil Organic Carbon Activity Module — Zero Tillage",
-      "activity_types": ["agriculture"],
-      "keywords": ["tillage", "zero tillage", "soil", "carbon", "farming"],
-      "link": "https://globalgoals.goldstandard.org/402-4-luf-agr-am-soc-module-zero-tillage/",
-      "description": "SOC module for zero tillage farming practices"
-    },
-    {
-      "id": "soc_cover_crops",
-      "name": "Soil Organic Carbon Activity Module for Cover Crops",
-      "activity_types": ["agriculture"],
-      "keywords": ["cover crops", "soil", "carbon", "farming", "agriculture"],
-      "link": "https://globalgoals.goldstandard.org/402-6-luf-agram-soc-module-cover-crops/",
-      "description": "SOC module for cover crop projects"
-    },
-    {
-      "id": "soc_pasture",
-      "name": "Soil Organic Carbon Activity Module for Managed Pasture",
-      "activity_types": ["agriculture"],
-      "keywords": ["pasture", "grassland", "grazing", "soil", "carbon"],
-      "link": "https://globalgoals.goldstandard.org/402-5-luf-agr-am-soc-module-managed-pastures/",
-      "description": "SOC module for managed pasture projects"
-    },
-    {
-      "id": "arr",
-      "name": "Afforestation-Reforestation GHG Emissions Reductions & Sequestration Methodology",
-      "activity_types": ["forestry"],
-      "keywords": ["afforestation", "reforestation", "tree planting", "forest", "ARR", "trees"],
-      "link": "https://globalgoals.goldstandard.org/403-luf-ar-methodology-ghgs-emission-reduction-and-sequestration-methodology/",
-      "description": "Methodology for afforestation and reforestation projects"
-    },
-    {
-      "id": "rice_methane",
-      "name": "Methane Emission Reduction by Adjusted Water Management in Rice Cultivation",
-      "activity_types": ["agriculture"],
-      "keywords": ["rice", "methane", "water management", "paddy", "rice cultivation"],
-      "link": "https://globalgoals.goldstandard.org/437-luf-agr-methane-emission-reduction-awm-practice-in-rice/",
-      "description": "Methodology for reducing methane in rice farming"
-    },
-    {
-      "id": "microbial_carbon",
-      "name": "Microbial Carbon Dioxide Mineralisation",
-      "activity_types": ["agriculture", "engineered_removals"],
-      "keywords": ["microbial", "mineralisation", "carbon", "soil biology"],
-      "link": "https://globalgoals.goldstandard.org/458_paa-m400-04_microbial-carbon-di-oxide-mineralisation/",
-      "description": "Methodology for microbial carbon mineralisation"
-    },
-    {
-      "id": "enteric_beef",
-      "name": "Methane Emissions Reduction from Enteric Fermentation in Beef Cattle",
-      "activity_types": ["agriculture"],
-      "keywords": ["livestock", "cattle", "beef", "methane", "enteric", "feed supplement"],
-      "link": "https://globalgoals.goldstandard.org/438-luf-agr-methane-emissions-reduction-from-enteric-fermentation-in-beef-cattle-through-application-of-feed-supplements/",
-      "description": "Methodology for reducing methane from beef cattle"
-    },
-    {
-      "id": "enteric_dairy",
-      "name": "Reducing Methane Emissions from Enteric Fermentation in Dairy Cows",
-      "activity_types": ["agriculture"],
-      "keywords": ["dairy", "cow", "milk", "methane", "enteric", "livestock"],
-      "link": "https://globalgoals.goldstandard.org/404-luf-agr-livestock-enteric-fermentation-in-dairy-cows-through-application-of-feed-supplements/",
-      "description": "Methodology for reducing methane from dairy cows"
-    },
-    {
-      "id": "enteric_cattle_capture",
-      "name": "In-situ Capture and Conversion of Cattle Enteric Methane",
-      "activity_types": ["agriculture"],
-      "keywords": ["cattle", "methane capture", "enteric", "livestock", "conversion"],
-      "link": "https://globalgoals.goldstandard.org/453_gs4gg-paa-m400-03-in-situ-capture-and-conversion-of-cattle-enteric-methane/",
-      "description": "In-situ methane capture from cattle"
-    },
-    {
-      "id": "mangrove",
-      "name": "Sustainable Management of Mangroves",
-      "activity_types": ["blue_carbon"],
-      "keywords": ["mangrove", "blue carbon", "coastal", "wetland", "ocean"],
-      "link": "https://globalgoals.goldstandard.org/443-bcfw-methodology-sustainable-management-of-mangroves/",
-      "description": "Methodology for mangrove conservation and management"
-    },
-    {
-      "id": "water_benefit",
-      "name": "Gold Standard Methodology for Accreditation of Water Benefit Certificates",
-      "activity_types": ["community_services"],
-      "keywords": ["water", "WASH", "sanitation", "drinking water", "water access"],
-      "link": "https://globalgoals.goldstandard.org/425_wbcs_wash_water-access-and-water-sanitation-and-hygiene-wash-projects/",
-      "description": "Methodology for water access and WASH projects"
-    },
-    {
-      "id": "safe_water",
-      "name": "Emission Reductions from Safe Drinking Water Supply",
-      "activity_types": ["community_services"],
-      "keywords": ["safe water", "drinking water", "water purification", "boiling water"],
-      "link": "https://globalgoals.goldstandard.org/429-ee-sws-emission-reductions-from-safe-drinking-water-supply/",
-      "description": "Methodology for safe drinking water projects"
-    },
-    {
-      "id": "tpddtec",
-      "name": "TPDDTEC — Technologies and Practices to Displace Decentralised Thermal Energy",
-      "activity_types": ["community_services", "renewable_energy"],
-      "keywords": ["cookstove", "cooking", "thermal", "biomass", "household energy", "stove", "ICS"],
-      "link": "https://globalgoals.goldstandard.org/407-ee-ics-technologies-and-practices-to-displace-decentrilized-thermal-energy-tpddtec-consumption/",
-      "description": "Main methodology for improved cookstove projects"
-    },
-    {
-      "id": "simplified_cookstove",
-      "name": "Gold Standard Simplified Methodology for Clean and Efficient Cookstoves",
-      "activity_types": ["community_services"],
-      "keywords": ["cookstove", "clean cooking", "stove", "simplified", "household"],
-      "link": "https://globalgoals.goldstandard.org/408-ee-ics-simplified-methodology-for-efficient-cookstoves/",
-      "description": "Simplified methodology for small-scale cookstove projects"
-    },
-    {
-      "id": "biogas_cooking",
-      "name": "Methodology for Animal Manure Management and Biogas Use for Thermal Energy",
-      "activity_types": ["community_services", "waste", "renewable_energy"],
-      "keywords": ["biogas", "manure", "cooking", "thermal energy", "biomass", "anaerobic"],
-      "link": "https://globalgoals.goldstandard.org/433-ee-ics-methodology-for-animal-manure-management-and-biogas-use-for-thermal-energy-generation/",
-      "description": "Methodology for biogas from animal manure for cooking"
-    },
-    {
-      "id": "black_carbon",
-      "name": "Quantification of Black Carbon from Cookstove Replacement",
-      "activity_types": ["community_services"],
-      "keywords": ["black carbon", "cookstove", "air quality", "SLCP", "household"],
-      "link": "https://globalgoals.goldstandard.org/412-ics-slcp-black-carbon-and-co-emitted-species-due-to-the-replacement-of-less-efficient-cookstoves-with-improved-efficiency-cookstoves/",
-      "description": "Methodology for quantifying black carbon reductions from cookstove replacement"
-    },
-    {
-      "id": "metered_cooking",
-      "name": "Methodology for Metered and Measured Energy Cooking Devices",
-      "activity_types": ["community_services"],
-      "keywords": ["electric cooking", "metered", "induction", "cooking device", "e-cooking"],
-      "link": "https://globalgoals.goldstandard.org/431_ee_ics_methodology-for-metered-measured-energy-cooking-devices/",
-      "description": "Methodology for electric/metered cooking devices"
-    },
-    {
-      "id": "two_wheeler",
-      "name": "Two and Three Wheeled Personal Transportation",
-      "activity_types": ["renewable_energy"],
-      "keywords": ["electric vehicle", "EV", "two wheeler", "three wheeler", "e-bike", "transport"],
-      "link": "https://globalgoals.goldstandard.org/434-ee-two-and-three-wheeled-personal-transportation/",
-      "description": "Methodology for electric two/three wheeler projects"
-    },
-    {
-      "id": "shore_electricity",
-      "name": "Emission Reduction by Shore-side or Off-shore Electricity Supply System",
-      "activity_types": ["renewable_energy"],
-      "keywords": ["shore power", "shipping", "port", "electricity", "offshore"],
-      "link": "https://globalgoals.goldstandard.org/439-fs-emission-reduction-by-shore-side-or-off-shore-electricity-supply-system/",
-      "description": "Methodology for shore-side electricity supply for ships"
-    },
-    {
-      "id": "suppressed_demand_electrification",
-      "name": "Suppressed Demand Methodology — Micro-scale Electrification",
-      "activity_types": ["renewable_energy", "community_services"],
-      "keywords": ["electrification", "solar", "mini grid", "rural energy", "off grid", "micro hydro"],
-      "link": "https://globalgoals.goldstandard.org/418-re-suppressed-demand-methodology-micro-scale-electrification-and-energization/",
-      "description": "Methodology for small-scale electrification projects in underserved areas"
-    },
-    {
-      "id": "solid_waste_recycling",
-      "name": "Recovery and Recycling of Materials from Solid Wastes",
-      "activity_types": ["waste"],
-      "keywords": ["recycling", "solid waste", "waste management", "recovery", "plastic", "materials"],
-      "link": "https://globalgoals.goldstandard.org/448-recovery-and-recycling-of-materials-from-solid-wastes/",
-      "description": "Methodology for solid waste recycling projects"
-    },
-    {
-      "id": "landfill_methane",
-      "name": "Reduction in Methane Emissions from Landfills through Decentralised Organic Waste Processing",
-      "activity_types": ["waste"],
-      "keywords": ["landfill", "methane", "organic waste", "composting", "decentralised", "MSW"],
-      "link": "https://globalgoals.goldstandard.org/441-wmh-reduction-in-methane-emissions-from-landfills-through-decentralised-organic-waste-processing/",
-      "description": "Methodology for reducing landfill methane through waste processing"
-    },
-    {
-      "id": "macroalgae",
-      "name": "Collection of Sargassum and Other Macroalgae to Avoid Emissions from Decomposition",
-      "activity_types": ["blue_carbon", "waste"],
-      "keywords": ["seaweed", "algae", "sargassum", "ocean", "macroalgae", "blue carbon"],
-      "link": "https://globalgoals.goldstandard.org/436-wm-methodology-for-collection-of-macroalgae-to-avoid-emissions-from-decomposition/",
-      "description": "Methodology for macroalgae collection and use"
-    },
-    {
-      "id": "shipping_retrofit",
-      "name": "Retrofit Energy Efficiency Measures in Shipping",
-      "activity_types": ["renewable_energy"],
-      "keywords": ["shipping", "vessel", "retrofit", "energy efficiency", "maritime"],
-      "link": "https://globalgoals.goldstandard.org/422-ee-shipping-retrofit-energy-efficiency-measures-in-shipping/",
-      "description": "Methodology for energy efficiency retrofits in shipping"
-    },
-    {
-      "id": "marine_fuels",
-      "name": "Methodology for Marine Fuels and Biobunkers",
-      "activity_types": ["renewable_energy"],
-      "keywords": ["marine fuel", "biofuel", "shipping", "biobunker", "vessel"],
-      "link": "https://globalgoals.goldstandard.org/442-ee-methodology-for-marine-fuels-and-biobunkers/",
-      "description": "Methodology for marine biofuels"
-    },
-    {
-      "id": "biofermccs",
-      "name": "Biomass Fermentation with Carbon Capture and Geologic Storage",
-      "activity_types": ["engineered_removals"],
-      "keywords": ["CCS", "carbon capture", "bioenergy", "BECCS", "fermentation", "geologic storage"],
-      "link": "https://globalgoals.goldstandard.org/440-ccs-biomass-fermentation-with-carbon-capture-and-geologic-storage/",
-      "description": "Methodology for BECCS projects"
-    },
-    {
-      "id": "carbon_mineralisation",
-      "name": "Carbon Mineralisation using Reactive Mineral Waste",
-      "activity_types": ["engineered_removals"],
-      "keywords": ["mineralisation", "mineral", "carbon removal", "CDR", "reactive mineral", "enhanced weathering"],
-      "link": "https://globalgoals.goldstandard.org/432-cdr-carbon-mineralisation-using-reactive-mineral-waste/",
-      "description": "Methodology for carbon mineralisation using mineral waste"
-    },
-    {
-      "id": "water_erosion",
-      "name": "Water and Erosion Impact Assessment of Sustainable Agricultural Land Management",
-      "activity_types": ["agriculture", "forestry"],
-      "keywords": ["water", "erosion", "land management", "sustainable agriculture", "watershed"],
-      "link": "https://globalgoals.goldstandard.org/428-water-and-erosion-impact-assessment-of-sustainable-agricultural-land-management-projects/",
-      "description": "Tool for water and erosion assessment in agriculture projects"
-    },
-    {
-      "id": "sugarcane_water",
-      "name": "Sustainable Sugarcane Initiative — Water Efficiency Methodology",
-      "activity_types": ["agriculture"],
-      "keywords": ["sugarcane", "water efficiency", "irrigation", "seedling", "nursery"],
-      "link": "https://globalgoals.goldstandard.org/426-wbcs-sustainable-sugarcane-initiative-methodology-to-quantify-water-efficiency-outcomes-from-seedling-nurseries-sugarcane-initiative-methodology-to-quantify-water-efficiency-outcomes-from-seedling/",
-      "description": "Methodology for water efficiency in sugarcane projects"
+  "verra": {
+    "display_name": "Verra / VCS",
+    "website": "https://verra.org",
+    "core_documents": [
+      {
+        "title": "VCS Program Guide v5.0",
+        "link": "https://verra.org/documents/vcs-program-guide-v5-0/",
+        "description": "Overarching VCS program document — required for all projects"
+      },
+      {
+        "title": "VCS Standard v5.0",
+        "link": "https://verra.org/documents/vcs-standard-v5-0/",
+        "description": "All specific requirements for project development & verification"
+      },
+      {
+        "title": "VCS Program Definitions v5.0",
+        "link": "https://verra.org/documents/vcs-program-definitions-v5-0/",
+        "description": "Definitions of all terms used in VCS program"
+      },
+      {
+        "title": "Registration and Issuance Process v5.0",
+        "link": "https://verra.org/documents/registration-and-issuance-process-v5-0/",
+        "description": "Procedures for registering projects and issuing VCUs"
+      },
+      {
+        "title": "VCS Methodology Requirements v5.0",
+        "link": "https://verra.org/documents/vcs-methodology-requirements-v5-0/",
+        "description": "Requirements for methodology development under VCS"
+      }
+    ],
+    "project_types": {
+      "afforestation_reforestation": {
+        "display_name": "Afforestation / Reforestation (A/R)",
+        "methodologies": [
+          {
+            "title": "VM0047 – Afforestation, Reforestation, and Revegetation",
+            "link": "https://verra.org/methodologies/vm0047-afforestation-reforestation-and-revegetation/",
+            "description": "Primary A/R methodology for VCS"
+          },
+          {
+            "title": "VM0010 – Improved Forest Management: Logged to Protected Forest",
+            "link": "https://verra.org/methodologies/vm0010/",
+            "description": "IFM methodology"
+          }
+        ],
+        "templates": [
+          {
+            "title": "VCS Project Description Template v4.4",
+            "link": "https://verra.org/documents/vcs-project-description-template-v4-4/",
+            "description": "Main project description template"
+          },
+          {
+            "title": "VCS Monitoring Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-monitoring-report-template-v4-4/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "VCS Validation Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-validation-report-template-v4-4/",
+            "description": "Validation report template"
+          },
+          {
+            "title": "VCS Verification Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-verification-report-template-v4-4/",
+            "description": "Verification report template"
+          }
+        ],
+        "other_docs": [
+          {
+            "title": "Procedure for Applying the AFOLU Non-Permanence Risk Tool v5.0",
+            "link": "https://verra.org/documents/procedure-for-applying-the-afolu-non-permanence-risk-tool-v5-0/",
+            "description": "Non-permanence risk assessment procedure for AFOLU projects"
+          }
+        ]
+      },
+      "soil_organic_carbon": {
+        "display_name": "Soil Organic Carbon (SOC)",
+        "methodologies": [
+          {
+            "title": "VM0042 – Improved Agricultural Land Management",
+            "link": "https://verra.org/methodologies/vm0042-improved-agricultural-land-management/",
+            "description": "Primary SOC methodology for VCS"
+          },
+          {
+            "title": "VM0021 – Soil Carbon Quantification Methodology",
+            "link": "https://verra.org/methodologies/vm0021/",
+            "description": "Soil carbon quantification"
+          }
+        ],
+        "templates": [
+          {
+            "title": "VCS Project Description Template v4.4",
+            "link": "https://verra.org/documents/vcs-project-description-template-v4-4/",
+            "description": "Main project description template"
+          },
+          {
+            "title": "VCS Monitoring Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-monitoring-report-template-v4-4/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "VCS Validation Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-validation-report-template-v4-4/",
+            "description": "Validation report template"
+          },
+          {
+            "title": "VCS Verification Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-verification-report-template-v4-4/",
+            "description": "Verification report template"
+          }
+        ],
+        "other_docs": [
+          {
+            "title": "Procedure for Applying the AFOLU Non-Permanence Risk Tool v5.0",
+            "link": "https://verra.org/documents/procedure-for-applying-the-afolu-non-permanence-risk-tool-v5-0/",
+            "description": "Non-permanence risk assessment for AFOLU"
+          }
+        ]
+      },
+      "blue_carbon": {
+        "display_name": "Blue Carbon / Mangrove",
+        "methodologies": [
+          {
+            "title": "VM0033 – Tidal Wetland and Seagrass Restoration",
+            "link": "https://verra.org/methodologies/vm0033-tidal-wetland-and-seagrass-restoration/",
+            "description": "Primary blue carbon methodology"
+          },
+          {
+            "title": "VM0007 – REDD+ Methodology Framework",
+            "link": "https://verra.org/methodologies/vm0007/",
+            "description": "REDD+ framework applicable to mangrove conservation"
+          }
+        ],
+        "templates": [
+          {
+            "title": "VCS Project Description Template v4.4",
+            "link": "https://verra.org/documents/vcs-project-description-template-v4-4/",
+            "description": "Main project description template"
+          },
+          {
+            "title": "VCS Monitoring Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-monitoring-report-template-v4-4/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "VCS Validation Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-validation-report-template-v4-4/",
+            "description": "Validation report template"
+          },
+          {
+            "title": "VCS Verification Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-verification-report-template-v4-4/",
+            "description": "Verification report template"
+          }
+        ],
+        "other_docs": [
+          {
+            "title": "Procedure for Applying the AFOLU Non-Permanence Risk Tool v5.0",
+            "link": "https://verra.org/documents/procedure-for-applying-the-afolu-non-permanence-risk-tool-v5-0/",
+            "description": "Non-permanence risk assessment procedure"
+          }
+        ]
+      },
+      "redd_plus": {
+        "display_name": "REDD+ / Forest Conservation",
+        "methodologies": [
+          {
+            "title": "VM0007 – REDD+ Methodology Framework",
+            "link": "https://verra.org/methodologies/vm0007/",
+            "description": "Primary REDD+ methodology"
+          },
+          {
+            "title": "VM0010 – Improved Forest Management: Logged to Protected Forest",
+            "link": "https://verra.org/methodologies/vm0010/",
+            "description": "IFM methodology for VCS"
+          },
+          {
+            "title": "VM0015 – Avoided Unplanned Deforestation",
+            "link": "https://verra.org/methodologies/vm0015/",
+            "description": "Avoided deforestation methodology"
+          }
+        ],
+        "templates": [
+          {
+            "title": "VCS Project Description Template v4.4",
+            "link": "https://verra.org/documents/vcs-project-description-template-v4-4/",
+            "description": "Main project description template"
+          },
+          {
+            "title": "VCS Monitoring Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-monitoring-report-template-v4-4/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "VCS Validation Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-validation-report-template-v4-4/",
+            "description": "Validation report template"
+          },
+          {
+            "title": "VCS Verification Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-verification-report-template-v4-4/",
+            "description": "Verification report template"
+          },
+          {
+            "title": "Loss Event Report v4.0",
+            "link": "https://verra.org/documents/loss-event-report-v4-0/",
+            "description": "Loss event report for AFOLU projects"
+          }
+        ],
+        "other_docs": [
+          {
+            "title": "Procedure for Applying the AFOLU Non-Permanence Risk Tool v5.0",
+            "link": "https://verra.org/documents/procedure-for-applying-the-afolu-non-permanence-risk-tool-v5-0/",
+            "description": "Non-permanence risk assessment procedure"
+          }
+        ]
+      },
+      "agriculture": {
+        "display_name": "Agriculture (General)",
+        "methodologies": [
+          {
+            "title": "VM0042 – Improved Agricultural Land Management",
+            "link": "https://verra.org/methodologies/vm0042-improved-agricultural-land-management/",
+            "description": "Agricultural land management methodology"
+          },
+          {
+            "title": "VM0017 – Adoption of Sustainable Agricultural Land Management",
+            "link": "https://verra.org/methodologies/vm0017/",
+            "description": "Sustainable agricultural land management"
+          }
+        ],
+        "templates": [
+          {
+            "title": "VCS Project Description Template v4.4",
+            "link": "https://verra.org/documents/vcs-project-description-template-v4-4/",
+            "description": "Main project description template"
+          },
+          {
+            "title": "VCS Monitoring Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-monitoring-report-template-v4-4/",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "VCS Validation Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-validation-report-template-v4-4/",
+            "description": "Validation report template"
+          },
+          {
+            "title": "VCS Verification Report Template v4.4",
+            "link": "https://verra.org/documents/vcs-verification-report-template-v4-4/",
+            "description": "Verification report template"
+          }
+        ],
+        "other_docs": [
+          {
+            "title": "Procedure for Applying the AFOLU Non-Permanence Risk Tool v5.0",
+            "link": "https://verra.org/documents/procedure-for-applying-the-afolu-non-permanence-risk-tool-v5-0/",
+            "description": "Non-permanence risk assessment procedure"
+          },
+          {
+            "title": "Sustainable Development Contributions Report Template",
+            "link": "https://verra.org/documents/sustainable-development-contributions-report/",
+            "description": "SD contributions report"
+          }
+        ]
+      }
     }
-  ],
-
-  "product_requirements": [
-    {
-      "title": "GHG Emissions Reductions & Sequestration Product Requirements",
-      "link": "https://globalgoals.goldstandard.org/501-pr-ghg-emissions-reductions-sequestration/",
-      "description": "Required for projects seeking GHG credits / VERs",
-      "applicable_to": ["all"]
-    },
-    {
-      "title": "Programme of Activity Requirements and Procedures",
-      "link": "https://globalgoals.goldstandard.org/107-par-programme-of-activity-requirements/",
-      "description": "Required if running a programme of activities (PoA)",
-      "applicable_to": ["all"]
-    },
-    {
-      "title": "Microscale Project Requirements",
-      "link": "https://globalgoals.goldstandard.org/108-par-microscale-project-requirements/",
-      "description": "For small-scale / microscale projects only",
-      "applicable_to": ["community_services", "renewable_energy", "agriculture"]
-    },
-    {
-      "title": "Renewable Energy Label Product Requirements",
-      "link": "https://globalgoals.goldstandard.org/502-pr-renewable-energy-label/",
-      "description": "Required for projects seeking renewable energy certificates",
-      "applicable_to": ["renewable_energy"]
-    },
-    {
-      "title": "Requirements — Core Carbon Principles Labelling",
-      "link": "https://globalgoals.goldstandard.org/503-pr-core-carbon-principles-labelling-requirements/",
-      "description": "For projects seeking ICVCM Core Carbon Principles label",
-      "applicable_to": ["all"]
-    },
-    {
-      "title": "Transition Requirements",
-      "link": "https://globalgoals.goldstandard.org/106-par-transition-requirements/",
-      "description": "If transitioning from an older Gold Standard version",
-      "applicable_to": ["all"]
-    },
-    {
-      "title": "Requirements and Procedures: Extension of Crediting Period (LUF/Blue Carbon)",
-      "link": "https://globalgoals.goldstandard.org/117_par_extension-of-crediting-period-luf/",
-      "description": "For extending crediting period of land-use or blue carbon projects",
-      "applicable_to": ["forestry", "blue_carbon", "agriculture"]
+  },
+  "icr": {
+    "display_name": "International Carbon Registry (ICR)",
+    "website": "https://documentation.carbonregistry.com",
+    "core_documents": [
+      {
+        "title": "ICR Requirement Document v6.1",
+        "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2F0rYmMPYGNvbCK0ClU949%2FICR%20Requirement%20Document%20v6.1.pdf?alt=media&token=1ee03786-e019-43b5-a5f9-31d9808ef0b1",
+        "description": "Core requirement document — required for ALL ICR projects"
+      },
+      {
+        "title": "ICR Methodology Requirements v3.1",
+        "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FxRSnS4JF8JnpZ449oUCf%2FICR%20Methodology%20Requirements%20v3.1.pdf?alt=media&token=b99b4a44-103e-4df4-b25e-e51bdbe37382",
+        "description": "Requirements for methodology development"
+      },
+      {
+        "title": "ICR Additionality Specifications v1.0",
+        "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2Fp14Sr92VAKl2p4aF8OnE%2FICR%20Additionality%20specifications%20v1.0.pdf?alt=media&token=deb33648-20c9-419a-92c1-f9169f928ae6",
+        "description": "Additionality requirements for all projects"
+      },
+      {
+        "title": "ICR Process Requirements v6.2",
+        "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FBrwQayr6dBSJt9Ayx616%2FICR%20Process%20Requirements%20v6.2.pdf?alt=media&token=fd2a83f0-f9f8-4fba-a99a-d0238e71c3fb",
+        "description": "Procedural requirements for project registration"
+      },
+      {
+        "title": "ICR Validation and Verification Specifications v2.0",
+        "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FNTupNaYAEpkA8z6ePI30%2FICR%20validation%20and%20verification%20specifications%20v2.0.pdf?alt=media&token=ba2efc09-9873-41d8-b735-525825d966e9",
+        "description": "V&V specifications for all projects"
+      },
+      {
+        "title": "ICR Definitions v3.2",
+        "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2Fd1fk0ii0MtsM3nm739cI%2FICR%20Definitions%20v3.2.pdf?alt=media&token=96010ea5-3929-48bc-b094-43d6635995fb",
+        "description": "Definitions of all ICR terms"
+      }
+    ],
+    "project_types": {
+      "afforestation_reforestation": {
+        "display_name": "Afforestation / Reforestation (A/R)",
+        "methodologies": [
+          {
+            "title": "ICR Approved Methodologies v4.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2F6Chz1TZlYXHNVh3R4OIs%2FICR%20approved%20methodologies%20v4.0.pdf?alt=media&token=2b43b303-08fb-4817-8138-0db81b0957e9",
+            "description": "List of all approved ICR methodologies including A/R"
+          }
+        ],
+        "templates": [
+          {
+            "title": "ICR Project Concept Description v6.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FC6KyZ94jD7bcYaGIRP4L%2FICR%20Project%20concept%20description%20v6.0.docx?alt=media&token=f3c6c63e-5cc8-40ae-8d7e-428bbeba2450",
+            "description": "Early-stage project concept template"
+          },
+          {
+            "title": "ICR Project Design Description (PDD) v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FUJYj3GVUUV6vL0WxDOwR%2FICR%20Project%20design%20description%20v6.1.docx?alt=media&token=a1a544ae-b583-4d4e-989f-c8a1e788fd22",
+            "description": "Main project design document"
+          },
+          {
+            "title": "ICR Monitoring Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2Fyso7JpLF9EOCONNMnrWK%2FICR%20Monitoring%20report%20v6.1.docx?alt=media&token=4e76914a-c683-4659-a8ea-99c37e1e46fe",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "ICR Validation Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FYi8HXHM4RdHFsCbExZ67%2FICR%20validation%20report%20v6.1.docx?alt=media&token=dac33f6a-820e-40e8-8ac1-df94b2df60cc",
+            "description": "Validation report template"
+          },
+          {
+            "title": "ICR Verification Report v6.11",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FO0A0gSXfBYRwZOzy518S%2FICR%20verification%20report%20v6.11.docx?alt=media&token=a0597ac0-d62e-4407-8e2e-68093c490132",
+            "description": "Verification report template"
+          },
+          {
+            "title": "ICR Non-Permanence Risk Assessment v6.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FxiPIvxE8BIpbQdATOAAc%2FICR%20non-permanence%20risk%20assessment%20v.6.0.docx?alt=media&token=75314d05-3b7f-4585-ab3f-6645bd58088d",
+            "description": "Non-permanence risk assessment for land-based projects"
+          },
+          {
+            "title": "ICR Tool for Environmental & Socio-Economic Safeguards v1.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FhecRXSmQlY3QET9rKAKe%2FICR%20Tool%20environmental%20and%20socio-economic%20safeguards%20and%20sustainable%20development%20v1.0.docx?alt=media&token=2b04fa40-5bfd-4379-a129-f064f3c70662",
+            "description": "Safeguards assessment tool"
+          }
+        ]
+      },
+      "soil_organic_carbon": {
+        "display_name": "Soil Organic Carbon (SOC)",
+        "methodologies": [
+          {
+            "title": "ICR Approved Methodologies v4.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2F6Chz1TZlYXHNVh3R4OIs%2FICR%20approved%20methodologies%20v4.0.pdf?alt=media&token=2b43b303-08fb-4817-8138-0db81b0957e9",
+            "description": "List of approved methodologies including SOC"
+          }
+        ],
+        "templates": [
+          {
+            "title": "ICR Project Concept Description v6.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FC6KyZ94jD7bcYaGIRP4L%2FICR%20Project%20concept%20description%20v6.0.docx?alt=media&token=f3c6c63e-5cc8-40ae-8d7e-428bbeba2450",
+            "description": "Project concept template"
+          },
+          {
+            "title": "ICR Project Design Description (PDD) v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FUJYj3GVUUV6vL0WxDOwR%2FICR%20Project%20design%20description%20v6.1.docx?alt=media&token=a1a544ae-b583-4d4e-989f-c8a1e788fd22",
+            "description": "Main project design document"
+          },
+          {
+            "title": "ICR Monitoring Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2Fyso7JpLF9EOCONNMnrWK%2FICR%20Monitoring%20report%20v6.1.docx?alt=media&token=4e76914a-c683-4659-a8ea-99c37e1e46fe",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "ICR Validation Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FYi8HXHM4RdHFsCbExZ67%2FICR%20validation%20report%20v6.1.docx?alt=media&token=dac33f6a-820e-40e8-8ac1-df94b2df60cc",
+            "description": "Validation report template"
+          },
+          {
+            "title": "ICR Verification Report v6.11",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FO0A0gSXfBYRwZOzy518S%2FICR%20verification%20report%20v6.11.docx?alt=media&token=a0597ac0-d62e-4407-8e2e-68093c490132",
+            "description": "Verification report template"
+          },
+          {
+            "title": "ICR Tool for Environmental & Socio-Economic Safeguards v1.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FhecRXSmQlY3QET9rKAKe%2FICR%20Tool%20environmental%20and%20socio-economic%20safeguards%20and%20sustainable%20development%20v1.0.docx?alt=media&token=2b04fa40-5bfd-4379-a129-f064f3c70662",
+            "description": "Safeguards assessment tool"
+          }
+        ]
+      },
+      "blue_carbon": {
+        "display_name": "Blue Carbon / Mangrove",
+        "methodologies": [
+          {
+            "title": "ICR Approved Methodologies v4.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2F6Chz1TZlYXHNVh3R4OIs%2FICR%20approved%20methodologies%20v4.0.pdf?alt=media&token=2b43b303-08fb-4817-8138-0db81b0957e9",
+            "description": "List of approved methodologies including blue carbon"
+          }
+        ],
+        "templates": [
+          {
+            "title": "ICR Project Concept Description v6.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FC6KyZ94jD7bcYaGIRP4L%2FICR%20Project%20concept%20description%20v6.0.docx?alt=media&token=f3c6c63e-5cc8-40ae-8d7e-428bbeba2450",
+            "description": "Project concept template"
+          },
+          {
+            "title": "ICR Project Design Description (PDD) v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FUJYj3GVUUV6vL0WxDOwR%2FICR%20Project%20design%20description%20v6.1.docx?alt=media&token=a1a544ae-b583-4d4e-989f-c8a1e788fd22",
+            "description": "Main project design document"
+          },
+          {
+            "title": "ICR Monitoring Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2Fyso7JpLF9EOCONNMnrWK%2FICR%20Monitoring%20report%20v6.1.docx?alt=media&token=4e76914a-c683-4659-a8ea-99c37e1e46fe",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "ICR Validation Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FYi8HXHM4RdHFsCbExZ67%2FICR%20validation%20report%20v6.1.docx?alt=media&token=dac33f6a-820e-40e8-8ac1-df94b2df60cc",
+            "description": "Validation report template"
+          },
+          {
+            "title": "ICR Verification Report v6.11",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FO0A0gSXfBYRwZOzy518S%2FICR%20verification%20report%20v6.11.docx?alt=media&token=a0597ac0-d62e-4407-8e2e-68093c490132",
+            "description": "Verification report template"
+          },
+          {
+            "title": "ICR Non-Permanence Risk Assessment v6.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FxiPIvxE8BIpbQdATOAAc%2FICR%20non-permanence%20risk%20assessment%20v.6.0.docx?alt=media&token=75314d05-3b7f-4585-ab3f-6645bd58088d",
+            "description": "Non-permanence risk assessment"
+          },
+          {
+            "title": "ICR Tool for Environmental & Socio-Economic Safeguards v1.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FhecRXSmQlY3QET9rKAKe%2FICR%20Tool%20environmental%20and%20socio-economic%20safeguards%20and%20sustainable%20development%20v1.0.docx?alt=media&token=2b04fa40-5bfd-4379-a129-f064f3c70662",
+            "description": "Safeguards assessment tool"
+          }
+        ]
+      },
+      "redd_plus": {
+        "display_name": "REDD+ / Forest Conservation",
+        "methodologies": [
+          {
+            "title": "ICR Approved Methodologies v4.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2F6Chz1TZlYXHNVh3R4OIs%2FICR%20approved%20methodologies%20v4.0.pdf?alt=media&token=2b43b303-08fb-4817-8138-0db81b0957e9",
+            "description": "List of all ICR approved methodologies"
+          }
+        ],
+        "templates": [
+          {
+            "title": "ICR Project Concept Description v6.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FC6KyZ94jD7bcYaGIRP4L%2FICR%20Project%20concept%20description%20v6.0.docx?alt=media&token=f3c6c63e-5cc8-40ae-8d7e-428bbeba2450",
+            "description": "Project concept template"
+          },
+          {
+            "title": "ICR Project Design Description (PDD) v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FUJYj3GVUUV6vL0WxDOwR%2FICR%20Project%20design%20description%20v6.1.docx?alt=media&token=a1a544ae-b583-4d4e-989f-c8a1e788fd22",
+            "description": "Main project design document"
+          },
+          {
+            "title": "ICR Monitoring Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2Fyso7JpLF9EOCONNMnrWK%2FICR%20Monitoring%20report%20v6.1.docx?alt=media&token=4e76914a-c683-4659-a8ea-99c37e1e46fe",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "ICR Validation and Verification Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FfPCqcUWr4boXjq8EAoCf%2FICR%20validation%20and%20verification%20report%20v6.1.docx?alt=media&token=6250f3cb-17b9-4351-a242-8219a99ca8ea",
+            "description": "Combined V&V report template"
+          },
+          {
+            "title": "ICR Non-Permanence Risk Assessment v6.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FxiPIvxE8BIpbQdATOAAc%2FICR%20non-permanence%20risk%20assessment%20v.6.0.docx?alt=media&token=75314d05-3b7f-4585-ab3f-6645bd58088d",
+            "description": "Non-permanence risk assessment"
+          },
+          {
+            "title": "ICR Tool for Environmental & Socio-Economic Safeguards v1.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FhecRXSmQlY3QET9rKAKe%2FICR%20Tool%20environmental%20and%20socio-economic%20safeguards%20and%20sustainable%20development%20v1.0.docx?alt=media&token=2b04fa40-5bfd-4379-a129-f064f3c70662",
+            "description": "Safeguards assessment tool"
+          }
+        ]
+      },
+      "agriculture": {
+        "display_name": "Agriculture (General)",
+        "methodologies": [
+          {
+            "title": "ICR Approved Methodologies v4.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2F6Chz1TZlYXHNVh3R4OIs%2FICR%20approved%20methodologies%20v4.0.pdf?alt=media&token=2b43b303-08fb-4817-8138-0db81b0957e9",
+            "description": "List of approved methodologies"
+          }
+        ],
+        "templates": [
+          {
+            "title": "ICR Project Concept Description v6.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FC6KyZ94jD7bcYaGIRP4L%2FICR%20Project%20concept%20description%20v6.0.docx?alt=media&token=f3c6c63e-5cc8-40ae-8d7e-428bbeba2450",
+            "description": "Project concept template"
+          },
+          {
+            "title": "ICR Project Design Description (PDD) v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FUJYj3GVUUV6vL0WxDOwR%2FICR%20Project%20design%20description%20v6.1.docx?alt=media&token=a1a544ae-b583-4d4e-989f-c8a1e788fd22",
+            "description": "Main project design document"
+          },
+          {
+            "title": "ICR Monitoring Report v6.1",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2Fyso7JpLF9EOCONNMnrWK%2FICR%20Monitoring%20report%20v6.1.docx?alt=media&token=4e76914a-c683-4659-a8ea-99c37e1e46fe",
+            "description": "Monitoring report template"
+          },
+          {
+            "title": "ICR Tool for Environmental & Socio-Economic Safeguards v1.0",
+            "link": "https://2441265052-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FfIdoGcZZdvap67xjb5h1%2Fuploads%2FhecRXSmQlY3QET9rKAKe%2FICR%20Tool%20environmental%20and%20socio-economic%20safeguards%20and%20sustainable%20development%20v1.0.docx?alt=media&token=2b04fa40-5bfd-4379-a129-f064f3c70662",
+            "description": "Safeguards assessment tool"
+          }
+        ]
+      }
     }
-  ],
-
-  "methodology_procedures": [
-    {
-      "title": "Requirements for Additionality Demonstration",
-      "link": "https://globalgoals.goldstandard.org/447-requirements-for-additionality-demonstration/",
-      "description": "How to prove your project is additional — important for all projects"
-    },
-    {
-      "title": "Requirements for Baseline Determination in Methodologies",
-      "link": "https://globalgoals.goldstandard.org/454_paa_ms_400_04_requirements-for-baseline-determination-in-methodologies/",
-      "description": "How to determine baseline for your project"
-    },
-    {
-      "title": "Requirements for Addressing Leakage in Methodologies",
-      "link": "https://globalgoals.goldstandard.org/456_paa_ms_400_05_requirements-for-addressing-leakage-in-methodologies/",
-      "description": "How to address and account for leakage"
-    }
-  ]
+  }
 }
