@@ -119,55 +119,55 @@ except Exception:
 
 # ─── Sidebar ─────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.header("ℹ️ About")
-    st.markdown("**🌿 Nature-Based Project Types:**")
+    st.header("About")
+    st.markdown("**Nature-Based Project Types:**")
     st.markdown("• Afforestation / Reforestation")
     st.markdown("• Soil Organic Carbon")
     st.markdown("• Blue Carbon / Mangrove")
     st.markdown("• REDD+ / Forest Conservation")
     st.markdown("• Agriculture")
     st.markdown("---")
-    st.markdown("**📚 Registries Covered:**")
+    st.markdown("**Registries Covered:**")
     st.markdown("• Gold Standard (GS4GG)")
     st.markdown("• Verra / VCS")
     st.markdown("• ICR")
 
 # ─── Main Interface ───────────────────────────────────────────────────────────
-st.markdown("## 🔍 Find Your Documents")
+st.markdown("## Find Your Documents")
 
 input_mode = st.radio(
     "How do you want to find documents?",
-    ["📋 Select from dropdowns", "💬 Describe your project (AI-powered)"],
+    ["Select from dropdowns", "Describe your project (AI-powered)"],
     horizontal=True
 )
 
 # ─── Registry + Project Type Maps ─────────────────────────────────────────────
 REGISTRY_MAP = {
-    "🌟 Gold Standard (GS4GG)": "gold_standard",
-    "✅ Verra / VCS": "verra",
-    "🔷 International Carbon Registry (ICR)": "icr"
+    "Gold Standard (GS4GG)": "gold_standard",
+    "Verra / VCS": "verra",
+    "International Carbon Registry (ICR)": "icr"
 }
 
 PROJECT_TYPE_MAP = {
-    "🌳 Afforestation / Reforestation (A/R)": "afforestation_reforestation",
-    "🌱 Soil Organic Carbon (SOC)": "soil_organic_carbon",
-    "🌊 Blue Carbon / Mangrove": "blue_carbon",
-    "🌲 REDD+ / Forest Conservation": "redd_plus",
-    "🌾 Agriculture (General)": "agriculture"
+    "Afforestation / Reforestation (A/R)": "afforestation_reforestation",
+    "Soil Organic Carbon (SOC)": "soil_organic_carbon",
+    "Blue Carbon / Mangrove": "blue_carbon",
+    "REDD+ / Forest Conservation": "redd_plus",
+    "Agriculture (General)": "agriculture"
 }
 
 # ─── Mode 1: Dropdown ─────────────────────────────────────────────────────────
-if input_mode == "📋 Select from dropdowns":
+if input_mode == "Select from dropdowns":
     col1, col2 = st.columns(2)
     with col1:
-        registry_display = st.selectbox("1️⃣ Select Registry", list(REGISTRY_MAP.keys()))
+        registry_display = st.selectbox("Select Registry", list(REGISTRY_MAP.keys()))
     with col2:
-        project_type_display = st.selectbox("2️⃣ Select Project Type", list(PROJECT_TYPE_MAP.keys()))
+        project_type_display = st.selectbox("Select Project Type", list(PROJECT_TYPE_MAP.keys()))
 
     registry_key = REGISTRY_MAP[registry_display]
     project_type_key = PROJECT_TYPE_MAP[project_type_display]
 
-    if st.button("🔍 Find Documents", type="primary", use_container_width=True):
+    if st.button("Find Documents", type="primary", use_container_width=True):
         st.session_state["show_results"] = True
         st.session_state["registry_key"] = registry_key
         st.session_state["project_type_key"] = project_type_key
@@ -187,25 +187,25 @@ else:
     with col_reg:
         override_registry = st.selectbox(
             "Registry (optional)",
-            ["🤖 Auto-detect (recommended)", "🌟 Gold Standard (GS4GG)", "✅ Verra / VCS", "🔷 ICR"],
+            ["Auto-detect (recommended)", "Gold Standard (GS4GG)", "Verra / VCS", "ICR"],
             help="Leave on Auto-detect to let AI pick the best registry. Select manually if you already know."
         )
     with col_hint:
-        st.markdown("<div style='padding-top:32px; color:#555; font-size:0.85rem;'>💡 If you don't select a registry, our AI will automatically choose the most suitable one based on your project description.</div>", unsafe_allow_html=True)
+        st.markdown("<div style='padding-top:32px; color:#555; font-size:0.85rem;'>If you don't select a registry, our AI will automatically choose the most suitable one based on your project description.</div>", unsafe_allow_html=True)
 
     OVERRIDE_REGISTRY_MAP = {
-        "🌟 Gold Standard (GS4GG)": "gold_standard",
-        "✅ Verra / VCS": "verra",
-        "🔷 ICR": "icr"
+        "Gold Standard (GS4GG)": "gold_standard",
+        "Verra / VCS": "verra",
+        "ICR": "icr"
     }
 
-    if st.button("🤖 Analyse & Find Documents", type="primary", use_container_width=True):
+    if st.button("Analyse & Find Documents", type="primary", use_container_width=True):
         if not api_key:
-            st.error("⚠️ AI analysis is temporarily unavailable. Please use the dropdown mode or contact support.")
+            st.error("AI analysis is temporarily unavailable. Please use the dropdown mode or contact support.")
         elif not project_description.strip():
-            st.warning("⚠️ Please describe your project first.")
+            st.warning("Please describe your project first.")
         else:
-            with st.spinner("🤖 Analysing your project..."):
+            with st.spinner("Analysing your project..."):
                 success = False
                 last_error = None
 
@@ -318,7 +318,7 @@ Your job is to classify the project into the best registry and correct project t
                         project_type_key = result.get("project_type", "afforestation_reforestation")
 
                         # Override registry if user manually selected one
-                        if override_registry != "🤖 Auto-detect (recommended)":
+                        if override_registry != "Auto-detect (recommended)":
                             registry_key = OVERRIDE_REGISTRY_MAP.get(override_registry, registry_key)
 
                         if registry_key not in db:
@@ -331,7 +331,7 @@ Your job is to classify the project into the best registry and correct project t
                         st.session_state["registry_key"] = registry_key
                         st.session_state["project_type_key"] = project_type_key
                         # If user overrode registry, show that name; else use AI suggestion
-                        if override_registry != "🤖 Auto-detect (recommended)":
+                        if override_registry != "Auto-detect (recommended)":
                             st.session_state["registry_display"] = override_registry
                         else:
                             st.session_state["registry_display"] = result.get("suggested_registry_display", registry_key)
@@ -346,12 +346,12 @@ Your job is to classify the project into the best registry and correct project t
                         last_error = str(e)
 
                 if not success:
-                    st.warning(f"⚠️ AI analysis failed ({last_error}). Showing default documents — please refine manually.")
+                    st.warning(f"AI analysis failed ({last_error}). Showing default documents — please refine manually.")
                     st.session_state["show_results"] = True
                     st.session_state["registry_key"] = "gold_standard"
                     st.session_state["project_type_key"] = "afforestation_reforestation"
-                    st.session_state["registry_display"] = "🌟 Gold Standard (GS4GG)"
-                    st.session_state["project_type_display"] = "🌳 Afforestation / Reforestation (A/R)"
+                    st.session_state["registry_display"] = "Gold Standard (GS4GG)"
+                    st.session_state["project_type_display"] = "Afforestation / Reforestation (A/R)"
                     st.session_state["ai_summary"] = None
 
 # ─── Safe Card Renderer ───────────────────────────────────────────────────────
@@ -505,53 +505,49 @@ def count_total_docs(registry_data, project_data, registry_key, db):
 
 # ─── Results ──────────────────────────────────────────────────────────────────
 if st.session_state.get("show_results"):
-    with st.spinner("📄 Loading documents..."):
+    with st.spinner("Loading documents..."):
         registry_key = st.session_state["registry_key"]
         project_type_key = st.session_state["project_type_key"]
         registry_data = db.get(registry_key, {})
         project_data = registry_data.get("project_types", {}).get(project_type_key, {})
 
     st.markdown("---")
-    st.markdown(f"## 📄 Documents for: **{st.session_state['project_type_display']}** under **{st.session_state['registry_display']}**")
+    st.markdown(f"## Documents for: **{st.session_state['project_type_display']}** — {st.session_state['registry_display']}")
 
-    # #1 Registry website link
     registry_website = registry_data.get("website", "#")
-    st.markdown(f"🌐 [Visit Official Registry Website]({registry_website})", unsafe_allow_html=False)
+    st.markdown(f"[Visit Official Registry Website]({registry_website})")
 
-    # #2 Empty state check
     if not project_data:
-        st.warning("⚠️ No documents found for this selection. Please try another combination.")
+        st.warning("No documents found for this selection. Please try another combination.")
         st.stop()
 
-    # AI Summary box
     if st.session_state.get("ai_summary"):
         ai = st.session_state["ai_summary"]
         confidence_pct = int(float(ai.get("confidence", 0)) * 100)
         confidence_color = "#4caf50" if confidence_pct >= 70 else "#ff9800"
         st.markdown(f"""
         <div class="ai-analysis">
-            🤖 <strong>AI Analysis</strong> &nbsp;|&nbsp;
+            <strong>AI Analysis</strong> &nbsp;|&nbsp;
             Confidence: <span style="color:{confidence_color}; font-weight:bold">{confidence_pct}%</span><br>
             <small>{ai.get('reasoning', '')}</small>
         </div>
         """, unsafe_allow_html=True)
         if confidence_pct < 70:
-            st.warning("⚠️ Confidence is below 70%. Please review the document selection carefully.")
-        st.info("📌 These documents are required based on the registry standards and methodology for your selected project type. Core documents apply to all projects; methodologies and templates are specific to this activity.")
+            st.warning("Confidence is below 70%. Please review the document selection carefully.")
+        st.info("These documents are required based on the registry standards and methodology for your selected project type. Core documents apply to all projects; methodologies and templates are specific to this activity.")
     else:
-        st.info("📌 Documents shown are based on your selected registry and project type. Core documents are required for all projects under this registry; methodologies and templates are specific to this activity type.")
+        st.info("Documents shown are based on your selected registry and project type. Core documents are required for all projects under this registry; methodologies and templates are specific to this activity type.")
 
-    # ─── Export / Checklist Section ───────────────────────────────────────────
     total_docs = count_total_docs(registry_data, project_data, registry_key, db)
-    registry_display_clean = st.session_state["registry_display"].replace("🌟 ", "").replace("✅ ", "").replace("🔷 ", "")
-    project_display_clean = st.session_state["project_type_display"].replace("🌳 ", "").replace("🌱 ", "").replace("🌊 ", "").replace("🌲 ", "").replace("🌾 ", "")
+    registry_display_clean = st.session_state["registry_display"]
+    project_display_clean = st.session_state["project_type_display"]
     safe_name = f"{registry_display_clean}_{project_display_clean}".replace(" ", "_").replace("/", "-").replace("(", "").replace(")", "")
 
     st.markdown(f"""
     <div class="export-box">
-        <strong>📥 Export Your Document Checklist</strong> &nbsp;·&nbsp;
+        <strong>Export Document Checklist</strong> &nbsp;·&nbsp;
         <span style="color:#166534">{total_docs} documents found</span><br>
-        <small style="color:#555">Download as Markdown checklist or CSV spreadsheet to track your project documentation.</small>
+        <small style="color:#555">Download as an HTML file — opens directly in any browser with clickable links and checkboxes.</small>
     </div>
     """, unsafe_allow_html=True)
 
@@ -561,7 +557,7 @@ if st.session_state.get("show_results"):
         registry_data, project_data, registry_key, db
     )
     st.download_button(
-        label="⬇️ Download Checklist (opens in browser)",
+        label="Download Checklist (opens in browser)",
         data=html_content,
         file_name=f"checklist_{safe_name}.html",
         mime="text/html",
@@ -571,13 +567,11 @@ if st.session_state.get("show_results"):
 
     # ─── Document Sections ────────────────────────────────────────────────────
 
-    # SDG Tool (GS only)
     if registry_key == "gold_standard" and "sdg_tool" in db["gold_standard"]:
         sdg = db["gold_standard"]["sdg_tool"]
         st.markdown("""<div class="section-header">🎯 SDG Impact Tool (Required for ALL GS Projects)</div>""", unsafe_allow_html=True)
         render_doc_card(sdg, "core")
 
-    # Core Documents
     core_docs = registry_data.get("core_documents", [])
     if core_docs:
         st.markdown(f"""<div class="section-header">🔴 Core Documents — Required for ALL {registry_data.get('display_name', '')} Projects ({len(core_docs)})</div>""", unsafe_allow_html=True)
@@ -586,14 +580,12 @@ if st.session_state.get("show_results"):
     else:
         st.info("No core documents found for this registry.")
 
-    # Activity Requirements
     activity_reqs = project_data.get("activity_requirements", [])
     if activity_reqs:
-        st.markdown(f"""<div class="section-header">🟡 Activity Requirements — Specific to This Project Type ({len(activity_reqs)})</div>""", unsafe_allow_html=True)
+        st.markdown(f"""<div class="section-header">🟡 Activity Requirements ({len(activity_reqs)})</div>""", unsafe_allow_html=True)
         for doc in activity_reqs:
             render_doc_card(doc, "doc")
 
-    # Methodologies
     methodologies = project_data.get("methodologies", [])
     if methodologies:
         st.markdown(f"""<div class="section-header">🟢 Methodologies ({len(methodologies)})</div>""", unsafe_allow_html=True)
@@ -602,7 +594,6 @@ if st.session_state.get("show_results"):
     else:
         st.info("No methodologies listed for this project type.")
 
-    # Templates
     templates = project_data.get("templates", [])
     if templates:
         st.markdown(f"""<div class="section-header">📋 Templates ({len(templates)})</div>""", unsafe_allow_html=True)
@@ -612,7 +603,6 @@ if st.session_state.get("show_results"):
     else:
         st.info("No templates found for this project type.")
 
-    # Other Docs
     other_docs = project_data.get("other_docs", [])
     if other_docs:
         st.markdown(f"""<div class="section-header">📎 Other Important Documents ({len(other_docs)})</div>""", unsafe_allow_html=True)
@@ -620,10 +610,9 @@ if st.session_state.get("show_results"):
             render_doc_card(doc, "other")
 
     st.markdown("---")
-    st.caption("💡 All links open the latest publicly available version from the official registry website.")
+    st.caption("All links open the latest publicly available version from the official registry website.")
 
-    # Reset button
-    if st.button("🔄 Search Again", use_container_width=True):
+    if st.button("Search Again", use_container_width=True):
         st.session_state["show_results"] = False
         st.session_state["ai_summary"] = None
         st.rerun()
