@@ -2,8 +2,6 @@ import streamlit as st
 import json
 import re
 import os
-import csv
-import io
 from datetime import datetime
 from openai import OpenAI
 import httpx
@@ -377,116 +375,119 @@ def render_doc_card(doc, card_type="doc"):
     """, unsafe_allow_html=True)
 
 
-# ─── Export Builders ──────────────────────────────────────────────────────────
-def build_checklist_markdown(registry_display, project_type_display, registry_data, project_data, registry_key, db):
-    """Build a clean markdown checklist string for download."""
-    lines = []
+# ─── Export Builder — HTML Only ──────────────────────────────────────────────
+def build_checklist_html(registry_display, project_type_display, registry_data, project_data, registry_key, db):
+    """Build a beautiful HTML checklist that opens directly in any browser."""
     now = datetime.now().strftime("%d %b %Y, %H:%M")
 
-    lines.append(f"# 📋 Carbon Project Document Checklist")
-    lines.append(f"")
-    lines.append(f"**Registry:** {registry_display}")
-    lines.append(f"**Project Type:** {project_type_display}")
-    lines.append(f"**Generated:** {now}")
-    lines.append(f"")
-    lines.append(f"---")
-    lines.append(f"")
-    lines.append(f"> Use this checklist to track which documents you have reviewed and submitted.")
-    lines.append(f"")
+    def section_html(icon, title, docs, color, doc_type="link"):
+        if not docs:
+            return ""
+        rows = ""
+        for doc in docs:
+            t = doc.get("title", "Untitled")
+            l = doc.get("link", "#")
+            d = doc.get("description", "")
+            rows += f"""
+            <tr>
+                <td style="padding:12px 16px; vertical-align:top; width:28px;">
+                    <input type="checkbox" style="width:16px;height:16px;cursor:pointer;accent-color:{color};">
+                </td>
+                <td style="padding:12px 8px 12px 0;">
+                    <a href="{l}" target="_blank" style="color:#1a4731;font-weight:600;text-decoration:none;font-size:0.95rem;">{t}</a><br>
+                    <span style="color:#666;font-size:0.82rem;">{d}</span>
+                </td>
+            </tr>"""
+        return f"""
+        <div style="margin-bottom:28px;">
+            <div style="background:{color};color:white;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:1rem;">
+                {icon} {title} &nbsp;<span style="font-weight:400;font-size:0.85rem;opacity:0.85;">({len(docs)} documents)</span>
+            </div>
+            <table style="width:100%;border-collapse:collapse;background:white;border:1px solid #e0e0e0;border-top:none;border-radius:0 0 8px 8px;overflow:hidden;">
+                {rows}
+            </table>
+        </div>"""
+
+    # Build all sections
+    sections = ""
 
     # SDG Tool (GS only)
     if registry_key == "gold_standard" and "sdg_tool" in db.get("gold_standard", {}):
         sdg = db["gold_standard"]["sdg_tool"]
-        lines.append(f"## 🎯 SDG Impact Tool (Required for ALL GS Projects)")
-        lines.append(f"")
-        lines.append(f"- [ ] [{sdg.get('title', '')}]({sdg.get('link', '#')})")
-        lines.append(f"  - *{sdg.get('description', '')}*")
-        lines.append(f"")
+        sections += section_html("🎯", "SDG Impact Tool — Required for ALL GS Projects", [sdg], "#7b1fa2")
 
-    # Core Documents
-    core_docs = registry_data.get("core_documents", [])
-    if core_docs:
-        lines.append(f"## 🔴 Core Documents — Required for ALL Projects")
-        lines.append(f"")
-        for doc in core_docs:
-            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
-            lines.append(f"  - *{doc.get('description', '')}*")
-        lines.append(f"")
+    sections += section_html("🔴", f"Core Documents — Required for ALL {registry_data.get('display_name','')} Projects",
+                             registry_data.get("core_documents", []), "#c62828")
 
-    # Activity Requirements
-    activity_reqs = project_data.get("activity_requirements", [])
-    if activity_reqs:
-        lines.append(f"## 🟡 Activity Requirements")
-        lines.append(f"")
-        for doc in activity_reqs:
-            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
-            lines.append(f"  - *{doc.get('description', '')}*")
-        lines.append(f"")
+    sections += section_html("🟡", "Activity Requirements — Specific to This Project Type",
+                             project_data.get("activity_requirements", []), "#f57f17")
 
-    # Methodologies
-    methodologies = project_data.get("methodologies", [])
-    if methodologies:
-        lines.append(f"## 🟢 Methodologies")
-        lines.append(f"")
-        for doc in methodologies:
-            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
-            lines.append(f"  - *{doc.get('description', '')}*")
-        lines.append(f"")
+    sections += section_html("🟢", "Methodologies",
+                             project_data.get("methodologies", []), "#2e7d32")
 
-    # Templates
-    templates = project_data.get("templates", [])
-    if templates:
-        lines.append(f"## 📋 Templates")
-        lines.append(f"")
-        for doc in templates:
-            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
-            lines.append(f"  - *{doc.get('description', '')}*")
-        lines.append(f"")
+    sections += section_html("📋", "Templates",
+                             project_data.get("templates", []), "#f59e0b")
 
-    # Other Docs
-    other_docs = project_data.get("other_docs", [])
-    if other_docs:
-        lines.append(f"## 📎 Other Important Documents")
-        lines.append(f"")
-        for doc in other_docs:
-            lines.append(f"- [ ] [{doc.get('title', '')}]({doc.get('link', '#')})")
-            lines.append(f"  - *{doc.get('description', '')}*")
-        lines.append(f"")
+    sections += section_html("📎", "Other Important Documents",
+                             project_data.get("other_docs", []), "#1565c0")
 
-    lines.append(f"---")
-    lines.append(f"*Generated by Carbon Standards Document Finder · Flora Carbon*")
+    registry_website = registry_data.get("website", "#")
+    reg_name = registry_data.get("display_name", "")
 
-    return "\n".join(lines)
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carbon Project Checklist — {project_type_display}</title>
+<style>
+  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f4; color: #222; }}
+  .container {{ max-width: 860px; margin: 0 auto; padding: 32px 20px; }}
+  .header {{ background: linear-gradient(135deg, #1a4731 0%, #2d7a4f 100%); color: white; padding: 28px 32px; border-radius: 12px; margin-bottom: 28px; }}
+  .header h1 {{ font-size: 1.5rem; margin-bottom: 8px; }}
+  .meta {{ display: flex; gap: 24px; flex-wrap: wrap; margin-top: 12px; font-size: 0.88rem; opacity: 0.9; }}
+  .meta span {{ background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 20px; }}
+  .print-btn {{ background: white; color: #1a4731; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; float: right; margin-top: -4px; }}
+  .print-btn:hover {{ background: #e8f5e9; }}
+  .tip {{ background: #e8f5e9; border-left: 4px solid #2d7a4f; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 28px; font-size: 0.9rem; color: #1a4731; }}
+  table tr:hover {{ background: #fafafa; }}
+  .footer {{ text-align: center; color: #888; font-size: 0.82rem; margin-top: 32px; padding-top: 16px; border-top: 1px solid #ddd; }}
+  a:hover {{ text-decoration: underline !important; }}
+  @media print {{
+    .print-btn {{ display: none; }}
+    body {{ background: white; }}
+    .container {{ padding: 0; }}
+  }}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+    <h1>📋 Carbon Project Document Checklist</h1>
+    <div class="meta">
+      <span>🏛️ {registry_display}</span>
+      <span>🌿 {project_type_display}</span>
+      <span>📅 Generated: {now}</span>
+    </div>
+  </div>
 
+  <div class="tip">
+    ✅ <strong>How to use:</strong> Click each checkbox as you review and collect the document. Click any document title to open it directly.
+    &nbsp;·&nbsp; <a href="{registry_website}" target="_blank" style="color:#1a4731;font-weight:600;">🌐 Visit {reg_name} Official Website</a>
+  </div>
 
-def build_checklist_csv(registry_display, project_type_display, registry_data, project_data, registry_key, db):
-    """Build a CSV string for download."""
-    output = io.StringIO()
-    writer = csv.writer(output)
+  {sections}
 
-    writer.writerow(["Section", "Document Title", "Description", "Link", "Status"])
-
-    # SDG Tool
-    if registry_key == "gold_standard" and "sdg_tool" in db.get("gold_standard", {}):
-        sdg = db["gold_standard"]["sdg_tool"]
-        writer.writerow(["SDG Impact Tool", sdg.get("title", ""), sdg.get("description", ""), sdg.get("link", ""), "☐ Pending"])
-
-    for doc in registry_data.get("core_documents", []):
-        writer.writerow(["Core Document", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
-
-    for doc in project_data.get("activity_requirements", []):
-        writer.writerow(["Activity Requirement", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
-
-    for doc in project_data.get("methodologies", []):
-        writer.writerow(["Methodology", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
-
-    for doc in project_data.get("templates", []):
-        writer.writerow(["Template", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
-
-    for doc in project_data.get("other_docs", []):
-        writer.writerow(["Other Document", doc.get("title", ""), doc.get("description", ""), doc.get("link", ""), "☐ Pending"])
-
-    return output.getvalue()
+  <div class="footer">
+    Generated by <strong>Carbon Standards Document Finder</strong> · Flora Carbon<br>
+    All links open the latest publicly available version from the official registry website.
+  </div>
+</div>
+</body>
+</html>"""
+    return html
 
 
 def count_total_docs(registry_data, project_data, registry_key, db):
@@ -554,35 +555,19 @@ if st.session_state.get("show_results"):
     </div>
     """, unsafe_allow_html=True)
 
-    col_md, col_csv = st.columns(2)
-
-    with col_md:
-        md_content = build_checklist_markdown(
-            st.session_state["registry_display"],
-            st.session_state["project_type_display"],
-            registry_data, project_data, registry_key, db
-        )
-        st.download_button(
-            label="⬇️ Download Checklist (.md)",
-            data=md_content,
-            file_name=f"checklist_{safe_name}.md",
-            mime="text/markdown",
-            use_container_width=True
-        )
-
-    with col_csv:
-        csv_content = build_checklist_csv(
-            st.session_state["registry_display"],
-            st.session_state["project_type_display"],
-            registry_data, project_data, registry_key, db
-        )
-        st.download_button(
-            label="⬇️ Download Checklist (.csv)",
-            data=csv_content,
-            file_name=f"checklist_{safe_name}.csv",
-            mime="text/csv",
-            use_container_width=True
-        )
+    html_content = build_checklist_html(
+        st.session_state["registry_display"],
+        st.session_state["project_type_display"],
+        registry_data, project_data, registry_key, db
+    )
+    st.download_button(
+        label="⬇️ Download Checklist (opens in browser)",
+        data=html_content,
+        file_name=f"checklist_{safe_name}.html",
+        mime="text/html",
+        use_container_width=True,
+        type="primary"
+    )
 
     # ─── Document Sections ────────────────────────────────────────────────────
 
